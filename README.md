@@ -11,3 +11,6 @@ A xcsimctl API server built in Swift
 
 ## Endpoints
 
+- `/` - App information
+- `/list`  (`simctl list`) - list devices and runtimes
+- `/ping` - Verify healthy server
