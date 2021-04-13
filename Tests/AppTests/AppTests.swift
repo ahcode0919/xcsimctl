@@ -2,14 +2,34 @@
 import XCTVapor
 
 final class AppTests: XCTestCase {
-    func testHelloWorld() throws {
-        let app = Application(.testing)
-        defer { app.shutdown() }
+    var app: Application!
+    
+    override func setUpWithError() throws {
+        app = Application(.testing)
         try configure(app)
-
-        try app.test(.GET, "hello", afterResponse: { res in
+    }
+    
+    override func tearDownWithError() throws {
+        app.shutdown()
+    }
+    
+    func testApp() throws {
+        try app.test(.GET, "/", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            XCTAssertEqual(res.body.string, "Hello, world!")
+            XCTAssertEqual(res.body.string, "XCSimctl Server")
+        })
+    }
+    
+    func testList() throws {
+        try app.test(.GET, "list", afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+            XCTAssertNotNil(try? res.content.decode(DeviceList.self))
+        })
+    }
+    
+    func testPing() throws {
+        try app.test(.GET, "ping", afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
         })
     }
 }
