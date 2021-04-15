@@ -7,7 +7,7 @@
 
 import Foundation
 
-func shell(_ command: String) -> String {
+func shell(_ command: String) -> Data {
     let task = Process()
     let pipe = Pipe()
     
@@ -17,8 +17,5 @@ func shell(_ command: String) -> String {
     task.launchPath = "/bin/zsh"
     task.launch()
     
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8)!
-    
-    return output
+    return pipe.fileHandleForReading.readDataToEndOfFile()
 }

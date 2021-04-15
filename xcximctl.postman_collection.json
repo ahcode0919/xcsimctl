@@ -11,62 +11,149 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8080",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{baseUrl}}"
 					],
-					"port": "8080"
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "test",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://127.0.0.1:8080/test",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8080",
 					"path": [
-						"test"
+						""
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "simulator",
+			"name": "list",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8080/sim",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/list",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{baseUrl}}"
 					],
-					"port": "8080",
 					"path": [
-						"sim"
+						"list"
 					]
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "list/devices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/list/devices",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"list",
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list/devicetypes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/list/devicetypes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"list",
+						"devicetypes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list/pairs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/list/pairs",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"list",
+						"pairs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list/runtimes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/list/runtimes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"list",
+						"runtimes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/ping",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8c358725-8ca4-44c6-a19f-71c9a20e4ab4",
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8080"
 		}
 	]
 }
