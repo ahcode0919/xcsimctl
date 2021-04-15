@@ -1,6 +1,6 @@
 # xcsimctl
 
-A xcsimctl API server built in Swift. Currently under development.
+A xcrun simctl API server built in Swift + Vapor. Currently under development.
 
 ## Setup
 
@@ -9,11 +9,22 @@ A xcsimctl API server built in Swift. Currently under development.
 - Install Vapor - `brew install vapor`
 - Run application - `vapor run`
 
-## Endpoints
+## Usage
 
-- `/` - App information
-- `/list`  (`simctl list`) - list devices and runtimes
-- `/ping` - Verify healthy server
+- Can be run via terminal or Xcode build scripts
+- Default base address is:  `http://127.0.0.1:8080`
+- Postman collection provided for testing endpoints [Collection](./xcximctl.postman_collection.json)
+    * Get Postman [Postman](https://www.postman.com)
+
+## Supported Endpoints
+
+- `GET /` - App information
+- `GET /list`  (`simctl list`) - list all devices, device types, pairs, and runtimes
+- `GET /list/devices` (`simctl list devices`) - list devices
+- `GET /list/devicetypes` (`simctl list devicetypes`) - list device types
+- `GET /list/pairs` (`simctl list pairs`) - list device pairs
+- `GET /list/runtimes` (`simctl list runtimes`) - list runtimes
+- `GET /ping` - Verify healthy server
 
 ## Roadmap
 

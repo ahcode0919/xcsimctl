@@ -2,20 +2,11 @@
 //  File.swift
 //  
 //
-//  Created by Aaron Hinton on 4/11/21.
+//  Created by Aaron Hinton on 4/14/21.
 //
 
 import Foundation
 import Vapor
-
-struct List {
-    static func list() -> DeviceList {
-        let simulatorOutput = shell("xcrun simctl list --json")
-        let decoder = JSONDecoder()
-        let product = try! decoder.decode(DeviceList.self, from: simulatorOutput.data(using: .utf8)!)
-        return product
-    }
-}
 
 struct DeviceList: Content {
     var devicetypes: [DeviceType]

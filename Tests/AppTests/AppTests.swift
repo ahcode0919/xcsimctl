@@ -1,3 +1,12 @@
+//
+//  AppTests.swift
+//
+//
+//  Created by Aaron Hinton on 4/14/21.
+//
+
+import Foundation
+
 @testable import App
 import XCTVapor
 
@@ -17,13 +26,6 @@ final class AppTests: XCTestCase {
         try app.test(.GET, "/", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, "XCSimctl Server")
-        })
-    }
-    
-    func testList() throws {
-        try app.test(.GET, "list", afterResponse: { res in
-            XCTAssertEqual(res.status, .ok)
-            XCTAssertNotNil(try? res.content.decode(DeviceList.self))
         })
     }
     
