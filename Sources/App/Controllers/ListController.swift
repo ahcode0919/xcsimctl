@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ListController.swift
 //  
 //
 //  Created by Aaron Hinton on 4/11/21.
@@ -20,7 +20,7 @@ struct ListController: RouteCollection {
     func listAll(_ req: Request) throws -> DeviceList {
         let output = shell("xcrun simctl list --json")
         guard let deviceList = try? JSONDecoder().decode(DeviceList.self, from: output) else {
-            throw Abort(.internalServerError, reason: "Unable to parse simctl output")
+            throw SimctlError.simctlParseError(nil)
         }
         return deviceList
     }
@@ -29,7 +29,7 @@ struct ListController: RouteCollection {
         let output = shell("xcrun simctl list devices --json")
         guard let devicesJSON = try? JSONDecoder().decode([String: [String: [Device]]].self, from: output),
             let devices = devicesJSON["devices"] else {
-            throw Abort(.internalServerError, reason: "Unable to parse simctl output")
+            throw SimctlError.simctlParseError(nil)
         }
         return devices
     }
@@ -38,7 +38,7 @@ struct ListController: RouteCollection {
         let output = shell("xcrun simctl list devicetypes --json")
         guard let deviceTypesJSON = try? JSONDecoder().decode([String: [DeviceType]].self, from: output),
             let deviceTypes = deviceTypesJSON["devicetypes"] else {
-            throw Abort(.internalServerError, reason: "Unable to parse simctl output")
+            throw SimctlError.simctlParseError(nil)
         }
         return deviceTypes
     }
@@ -47,7 +47,7 @@ struct ListController: RouteCollection {
         let output = shell("xcrun simctl list pairs --json")
         guard let pairsJSON = try? JSONDecoder().decode([String: [String: Pair]].self, from: output),
             let pairs = pairsJSON["pairs"] else {
-            throw Abort(.internalServerError, reason: "Unable to parse simctl output")
+            throw SimctlError.simctlParseError(nil)
         }
         return pairs
     }
@@ -56,7 +56,7 @@ struct ListController: RouteCollection {
         let output = shell("xcrun simctl list runtimes --json")
         guard let runtimesJSON = try? JSONDecoder().decode([String: [Runtime]].self, from: output),
             let runtimes = runtimesJSON["runtimes"] else {
-            throw Abort(.internalServerError, reason: "Unable to parse simctl output")
+            throw SimctlError.simctlParseError(nil)
         }
         return runtimes
     }
