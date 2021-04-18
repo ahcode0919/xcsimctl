@@ -8,6 +8,12 @@
 import Foundation
 import Vapor
 
+//List available devices, device types, runtimes, or device pairs.
+//Usage: simctl list [-j | --json] [-v] [devices|devicetypes|runtimes|pairs] [<search term>|available]
+//-j     Print as JSON
+//-v     More verbose output
+//
+//Specify one of 'devices', 'devicetypes', 'runtimes', or 'pairs' to list only items of that type. If a type filter is specified you may also specify a search term. Search terms use a simple case-insensitive contains check against the item's description. You may use the search term 'available' to only list available items.
 struct ListController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.get("list", use: listAll)
@@ -20,7 +26,7 @@ struct ListController: RouteCollection {
     func listAll(_ req: Request) throws -> DeviceList {
         let output = shell("xcrun simctl list --json")
         guard let deviceList = try? JSONDecoder().decode(DeviceList.self, from: output) else {
-            throw SimctlError.simctlParseError(nil)
+            throw SimctlError.parseError(nil)
         }
         return deviceList
     }
@@ -29,7 +35,7 @@ struct ListController: RouteCollection {
         let output = shell("xcrun simctl list devices --json")
         guard let devicesJSON = try? JSONDecoder().decode([String: [String: [Device]]].self, from: output),
             let devices = devicesJSON["devices"] else {
-            throw SimctlError.simctlParseError(nil)
+            throw SimctlError.parseError(nil)
         }
         return devices
     }
@@ -38,7 +44,7 @@ struct ListController: RouteCollection {
         let output = shell("xcrun simctl list devicetypes --json")
         guard let deviceTypesJSON = try? JSONDecoder().decode([String: [DeviceType]].self, from: output),
             let deviceTypes = deviceTypesJSON["devicetypes"] else {
-            throw SimctlError.simctlParseError(nil)
+            throw SimctlError.parseError(nil)
         }
         return deviceTypes
     }
@@ -47,7 +53,7 @@ struct ListController: RouteCollection {
         let output = shell("xcrun simctl list pairs --json")
         guard let pairsJSON = try? JSONDecoder().decode([String: [String: Pair]].self, from: output),
             let pairs = pairsJSON["pairs"] else {
-            throw SimctlError.simctlParseError(nil)
+            throw SimctlError.parseError(nil)
         }
         return pairs
     }
@@ -56,7 +62,7 @@ struct ListController: RouteCollection {
         let output = shell("xcrun simctl list runtimes --json")
         guard let runtimesJSON = try? JSONDecoder().decode([String: [Runtime]].self, from: output),
             let runtimes = runtimesJSON["runtimes"] else {
-            throw SimctlError.simctlParseError(nil)
+            throw SimctlError.parseError(nil)
         }
         return runtimes
     }

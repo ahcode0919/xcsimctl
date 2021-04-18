@@ -18,13 +18,15 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 
 ## Supported Endpoints
 
-- `GET /` - App information
-- `GET /list`  (`simctl list`) - list all devices, device types, pairs, and runtimes
-- `GET /list/devices` (`simctl list devices`) - list devices
-- `GET /list/devicetypes` (`simctl list devicetypes`) - list device types
-- `GET /list/pairs` (`simctl list pairs`) - list device pairs
-- `GET /list/runtimes` (`simctl list runtimes`) - list runtimes
-- `GET /ping` - Verify healthy server
+- `GET  /` - App information
+- `POST /create/:name/:devicetype`  (`simctl create name devicetype`) - Create simulator with specified devicetype
+- `POST /create/:name/:devicetype/?runtime=`  (`simctl create name devicetype runtime`) - Create simulator with specified devicetype and runtime
+- `GET  /list`  (`simctl list`) - list all devices, device types, pairs, and runtimes
+- `GET  /list/devices` (`simctl list devices`) - list devices
+- `GET  /list/devicetypes` (`simctl list devicetypes`) - list device types
+- `GET  /list/pairs` (`simctl list pairs`) - list device pairs
+- `GET  /list/runtimes` (`simctl list runtimes`) - list runtimes
+- `GET  /ping` - Verify healthy server
 
 ## Roadmap
 
@@ -32,7 +34,7 @@ Project currently under development
 
 - Implement place holder endpoints
 ```
-create              Create a new device.
+Complete - create   Create a new device.
 clone               Clone an existing device.
 upgrade             Upgrade a device to a newer runtime.
 delete              Delete spcified devices, unavailable devices, or all devices.
@@ -52,7 +54,7 @@ get_app_container   Print the path of the installed app's container
 launch              Launch an application by identifier on a device.
 terminate           Terminate an application by identifier on a device.
 spawn               Spawn a process by executing a given executable on a device.
-X - list            List available devices, device types, runtimes, or device pairs.
+Complete - list     List available devices, device types, runtimes, or device pairs.
 icloud_sync         Trigger iCloud sync on a device.
 pbsync              Sync the pasteboard content from one pasteboard to another.
 pbcopy              Copy standard input onto the device pasteboard.
@@ -67,6 +69,10 @@ push                Send a simulated push notification
 privacy             Grant, revoke, or reset privacy and permissions
 keychain            Manipulate a device's keychain
 ```
+
+- `/list` - add search term query
+
+- Add Search query string to list
 - Add Build environment for testing
 - Implement GET endpoints
 - Implement Post (string data) endpoints
