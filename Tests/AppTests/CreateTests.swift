@@ -23,7 +23,7 @@ final class CreateTests: XCTestCase {
     }
 
     func testCreate() throws {
-        let path = try URLHelper.escape(url: "/create/test/iPhone X")
+        let path = try URLHelper.escape(url: "create/test/iPhone X")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertNoThrow(try res.content.decode(CreateResponse.self))
@@ -31,7 +31,7 @@ final class CreateTests: XCTestCase {
     }
     
     func testCreateWithRuntime() throws {
-        let path = try URLHelper.escape(url: "/create/test/iPhone X?runtime=iOS13.6")
+        let path = try URLHelper.escape(url: "create/test/iPhone X?runtime=iOS13.6")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertNoThrow(try res.content.decode(CreateResponse.self))
@@ -39,7 +39,7 @@ final class CreateTests: XCTestCase {
     }
     
     func testIncompatibleDeviceTypeAndRuntime() throws {
-         let path = try URLHelper.escape(url: "/create/test/iPhone X?runtime=tvOS13.4")
+         let path = try URLHelper.escape(url: "create/test/iPhone X?runtime=tvOS13.4")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .internalServerError)
             XCTAssertContains(res.body.string, CreateError.incompatibleDevice.message)
@@ -47,7 +47,7 @@ final class CreateTests: XCTestCase {
     }
     
     func testInvalidDeviceType() throws {
-        try app.test(.POST, "/create/test/foo", afterResponse: { res in
+        try app.test(.POST, "create/test/foo", afterResponse: { res in
             XCTAssertEqual(res.status, .internalServerError)
             XCTAssertContains(res.body.string, CreateError.invalidDeviceType.message)
         })
@@ -58,6 +58,12 @@ final class CreateTests: XCTestCase {
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .internalServerError)
             XCTAssertContains(res.body.string, CreateError.invalidRuntime.message)
+        })
+    }
+    
+    func testMissingParameters() throws {
+        try app.test(.POST, "create", afterResponse: { res in
+            XCTAssertEqual(res.status, .notFound)
         })
     }
 }
