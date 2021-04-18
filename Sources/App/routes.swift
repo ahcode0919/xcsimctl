@@ -9,17 +9,7 @@ func routes(_ app: Application) throws {
         return Response(status: .ok)
     }
     
-//    app.get("list", ) { req -> Response in
-//        let response = Response()
-//        guard let list = List.list() else {
-//            throw Abort(.internalServerError, reason: "simctl list failed")
-//        }
-//        guard let _ = try? response.content.encode(list, as: .json) else {
-//            throw Abort(.internalServerError, reason: "simctl list returned an invalid response")
-//        }
-//        return response
-//    }
-    let listController = ListController()
-    try app.register(collection: listController)
+    try app.register(collection: CreateController())
+    try app.register(collection: ListController())
 }
 
