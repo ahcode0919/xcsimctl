@@ -18,13 +18,31 @@ final class SimctlErrorTests: XCTestCase {
         
         commandError = SimctlError.commandError("Test")
         XCTAssertEqual(commandError.status, .internalServerError)
-        XCTAssertEqual(commandError.reason, "Unable execute simctl command:\nTest")
+        XCTAssertEqual(commandError.reason, "Unable execute simctl command: Test")
     }
     
     func testSimctlError() {
-        let simctlError = SimctlError.error()
+        var simctlError = SimctlError.error()
         XCTAssertEqual(simctlError.status, .internalServerError)
         XCTAssertEqual(simctlError.reason, "simctl command failed")
+        
+        simctlError = SimctlError.error("error message")
+        XCTAssertEqual(simctlError.status, .internalServerError)
+        XCTAssertEqual(simctlError.reason, "simctl command failed: \"error message\"")
+    }
+    
+    func testSimctlMissingRouteParameters() {
+        var missingRouteParameters = SimctlError.missingRouteParameters()
+        XCTAssertEqual(missingRouteParameters.status, .badRequest)
+        XCTAssertEqual(missingRouteParameters.reason, "Missing one or more route parameters")
+        
+        missingRouteParameters = SimctlError.missingRouteParameters(["Test"])
+        XCTAssertEqual(missingRouteParameters.status, .badRequest)
+        XCTAssertEqual(missingRouteParameters.reason, "Missing the following route parameter: Test")
+        
+        missingRouteParameters = SimctlError.missingRouteParameters(["Test", "Test2"])
+        XCTAssertEqual(missingRouteParameters.status, .badRequest)
+        XCTAssertEqual(missingRouteParameters.reason, "Missing the following route parameters: Test, Test2")
     }
     
     func testSimctlParseError() {
@@ -34,6 +52,6 @@ final class SimctlErrorTests: XCTestCase {
         
         parseError = SimctlError.parseError("Test")
         XCTAssertEqual(parseError.status, .internalServerError)
-        XCTAssertEqual(parseError.reason, "Unable to parse simctl output:\nTest")
+        XCTAssertEqual(parseError.reason, "Unable to parse simctl output: Test")
     }
 }

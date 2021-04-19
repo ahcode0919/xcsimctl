@@ -10,6 +10,7 @@ func routes(_ app: Application) throws {
     }
     
     try app.register(collection: CreateController())
+    try app.register(collection: DeleteController())
     try app.register(collection: ListController())
 }
 

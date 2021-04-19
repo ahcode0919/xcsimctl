@@ -23,6 +23,110 @@
 			"response": []
 		},
 		{
+			"name": "create/:name/:devicetype",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/create/test/iPhone X/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"create",
+						"test",
+						"iPhone X",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create/:name/:devicetype?runtime=",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/create/test/iPhone X?runtime=iOS13.6",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"create",
+						"test",
+						"iPhone X"
+					],
+					"query": [
+						{
+							"key": "runtime",
+							"value": "iOS13.6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete?named=",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/delete?named=test",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"delete"
+					],
+					"query": [
+						{
+							"key": "named",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete/all",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/delete/all",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"delete",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete/unavailable",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/delete/unavailable",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"delete",
+						"unavailable"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "list",
 			"request": {
 				"method": "GET",
@@ -151,7 +255,7 @@
 	],
 	"variable": [
 		{
-			"id": "8c358725-8ca4-44c6-a19f-71c9a20e4ab4",
+			"id": "2d6c6f7f-3f94-42df-bc45-7779ea90dd8f",
 			"key": "baseUrl",
 			"value": "http://127.0.0.1:8080"
 		}

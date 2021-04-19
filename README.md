@@ -19,6 +19,9 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 ## Supported Endpoints
 
 - `GET  /` - App information
+- `POST /delete?named={name,name2}`  (`simctl delete name name2`) - Delete simulators by name (comma separated)
+- `POST /delete/all`  (`simctl delete all`) - Delete all simulators
+- `POST /delete/unavailable`  (`simctl delete unavailable`) - Delete all unavailable simulators
 - `POST /create/:name/:devicetype`  (`simctl create name devicetype`) - Create simulator with specified devicetype
 - `POST /create/:name/:devicetype/?runtime=`  (`simctl create name devicetype runtime`) - Create simulator with specified devicetype and runtime
 - `GET  /list`  (`simctl list`) - list all devices, device types, pairs, and runtimes
@@ -32,12 +35,11 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 
 Project currently under development
 
-- Implement place holder endpoints
 ```
 Complete - create   Create a new device.
 clone               Clone an existing device.
 upgrade             Upgrade a device to a newer runtime.
-delete              Delete spcified devices, unavailable devices, or all devices.
+Complete - delete   Delete spcified devices, unavailable devices, or all devices.
 pair                Create a new watch and phone pair.
 unpair              Unpair a watch and phone pair.
 pair_activate       Set a given pair as active.
@@ -72,7 +74,6 @@ keychain            Manipulate a device's keychain
 
 - `/list` - add search term query
 
-- Add Search query string to list
 - Add Build environment for testing
 - Implement GET endpoints
 - Implement Post (string data) endpoints
