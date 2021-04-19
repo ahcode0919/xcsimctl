@@ -16,9 +16,12 @@ final class ListTests: XCTestCase {
     override func setUpWithError() throws {
         app = Application(.testing)
         try configure(app)
+        let path = try URLHelper.escape(url: "create/test/iPhone X")
+        try app.test(.POST, path)
     }
     
     override func tearDownWithError() throws {
+        try app.test(.POST, "delete?named=test")
         app.shutdown()
     }
     

@@ -21,7 +21,7 @@ final class CreateErrorTests: XCTestCase {
         ]
         
         XCTAssertEqual(createErrors.count, messages.count)
-        XCTAssertTrue(createErrors.allSatisfy { $0.message == messages[$0]})
+        XCTAssertTrue(createErrors.allSatisfy { $0.message == messages[$0] })
     }
  
     func testFindError() throws {

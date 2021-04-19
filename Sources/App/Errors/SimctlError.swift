@@ -17,30 +17,33 @@ enum SimctlError {
 extension SimctlError: AbortError {
     var reason: String {
         switch self {
-        case .commandError(let command):
+        case .commandError(let message):
             let reason = "Unable execute simctl command"
-            guard let command = command else {
+            guard let message = message else {
                 return reason
             }
-            return "\(reason)\n\(command)"
+            return "\(reason): \(message)"
         case .error(let message):
             let reason = "simctl command failed"
             guard let message = message else {
                 return reason
             }
-            return "\(reason):\n\(message)"
+            return "\(reason): \"\(message)\""
         case .missingRouteParameters(let missingParameters):
-            let reason = "Missing one or more route parameters"
             guard let missingParameters = missingParameters else {
-                return reason
+                return "Missing one or more route parameters"
             }
-            return "\(reason): \(missingParameters.joined(separator: ", "))"
+            var message = "Missing the following route parameter"
+            if missingParameters.count > 1 {
+                message.append("s")
+            }
+            return "\(message): \(missingParameters.joined(separator: ", "))"
         case .parseError(let error):
             let reason = "Unable to parse simctl output"
             guard let error = error else {
                 return reason
             }
-            return "\(reason):\n\(error)"
+            return "\(reason): \(error)"
         }
     }
 
