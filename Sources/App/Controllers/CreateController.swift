@@ -39,7 +39,7 @@ struct CreateController: RouteCollection {
         if let runtime = try? req.query.decode(CreateQuery.self).runtime {
             command.append(" \(runtime)")
         }
-
+        print(command)
         let output = shell(command)
         guard var outputString = String(data: output, encoding: .utf8) else {
             throw SimctlError.parseError()
