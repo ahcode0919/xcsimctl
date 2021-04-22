@@ -1,4 +1,4 @@
-# xcsimctl
+# xcsimctl ![](https://github.com/ahcode0919/xcsimctl/actions/workflows/swift.yml/badge.svg?branch=main)
 
 A xcrun simctl API server built in Swift + Vapor. Currently under development.
 
