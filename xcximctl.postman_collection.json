@@ -68,12 +68,12 @@
 			"response": []
 		},
 		{
-			"name": "delete?named=",
+			"name": "delete?devices=",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/delete?named=test",
+					"raw": "{{baseUrl}}/delete?devices=test",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -82,9 +82,27 @@
 					],
 					"query": [
 						{
-							"key": "named",
+							"key": "devices",
 							"value": "test"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete/:devicename",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/delete/test",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"delete",
+						"test"
 					]
 				}
 			},
@@ -121,6 +139,65 @@
 					"path": [
 						"delete",
 						"unavailable"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "erase/:devicename",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/delete/test",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"delete",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "erase?devices=",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/erase?devices=test",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"erase"
+					],
+					"query": [
+						{
+							"key": "devices",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "erase/all",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/erase/all",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"erase",
+						"all"
 					]
 				}
 			},
@@ -255,7 +332,7 @@
 	],
 	"variable": [
 		{
-			"id": "2d6c6f7f-3f94-42df-bc45-7779ea90dd8f",
+			"id": "85f0628b-f83e-4391-8022-7ea34559e4ca",
 			"key": "baseUrl",
 			"value": "http://127.0.0.1:8080"
 		}
