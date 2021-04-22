@@ -1,13 +1,13 @@
 //
-//  DeleteModels.swift
+//  File.swift
 //  
 //
-//  Created by Aaron Hinton on 4/18/21.
+//  Created by Aaron Hinton on 4/21/21.
 //
 
 import Vapor
 
-struct DeleteQuery: Content {
+struct EraseQuery: Content {
     var devices: [String]?
     
     enum CodingKeys: String, CodingKey {
@@ -15,7 +15,7 @@ struct DeleteQuery: Content {
     }
 }
 
-extension DeleteQuery {
+extension EraseQuery {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let devicesString: String = try values.decode(String.self, forKey: .devices)

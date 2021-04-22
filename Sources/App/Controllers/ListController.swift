@@ -14,7 +14,7 @@ import Vapor
 //-v     More verbose output
 //
 //Specify one of 'devices', 'devicetypes', 'runtimes', or 'pairs' to list only items of that type. If a type filter is specified you may also specify a search term. Search terms use a simple case-insensitive contains check against the item's description. You may use the search term 'available' to only list available items.
-struct ListController: RouteCollection {
+class ListController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.get("list", use: listAll)
         routes.get("list", "devices", use: listDevices)
