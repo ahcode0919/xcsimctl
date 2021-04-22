@@ -12,10 +12,12 @@ import XCTVapor
 
 final class CreateTests: XCTestCase {
     var app: Application!
+    var runtimes: [AppRuntime: String]!
     
     override func setUpWithError() throws {
         app = Application(.testing)
         try configure(app)
+        runtimes = try AppTestHelper.getAvailableRuntimes(app: app)
     }
     
     override func tearDownWithError() throws {
@@ -31,7 +33,7 @@ final class CreateTests: XCTestCase {
     }
     
     func testCreateWithRuntime() throws {
-        let path = try URLHelper.escape(url: "create/test/iPhone X?runtime=iOS13.6")
+        let path = try URLHelper.escape(url: "create/test/iPhone X?runtime=\(runtimes[.ios]!)")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertNoThrow(try res.content.decode(CreateResponse.self))
@@ -39,7 +41,7 @@ final class CreateTests: XCTestCase {
     }
     
     func testIncompatibleDeviceTypeAndRuntime() throws {
-         let path = try URLHelper.escape(url: "create/test/iPhone X?runtime=tvOS13.4")
+        let path = try URLHelper.escape(url: "create/test/iPhone X?runtime=\(runtimes[.tvos]!)")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .internalServerError)
             XCTAssertContains(res.body.string, CreateError.incompatibleDevice.message)
