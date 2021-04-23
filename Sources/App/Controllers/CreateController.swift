@@ -24,7 +24,7 @@ import Vapor
 // An error was encountered processing the command (domain=com.apple.CoreSimulator.SimError, code=163):
 // Incompatible device
 
-struct CreateController: RouteCollection {
+class CreateController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.post(["create", ":name", ":devicetype"], use: create)
     }

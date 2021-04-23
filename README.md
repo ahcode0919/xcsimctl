@@ -19,11 +19,15 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 ## Supported Endpoints
 
 - `GET  /` - App information
-- `POST /delete?named={name,name2}`  (`simctl delete name name2`) - Delete simulators by name (comma separated)
-- `POST /delete/all`  (`simctl delete all`) - Delete all simulators
-- `POST /delete/unavailable`  (`simctl delete unavailable`) - Delete all unavailable simulators
 - `POST /create/:name/:devicetype`  (`simctl create name devicetype`) - Create simulator with specified devicetype
 - `POST /create/:name/:devicetype/?runtime=`  (`simctl create name devicetype runtime`) - Create simulator with specified devicetype and runtime
+- `POST /delete?devices={name,name2}`  (`simctl delete name name2`) - Delete one or more simulators by name (comma separated)
+- `POST /delete/:devicename`  (`simctl delete :devicename`) - Erase single device
+- `POST /delete/all`  (`simctl delete all`) - Delete all simulators
+- `POST /delete/unavailable`  (`simctl delete unavailable`) - Delete all unavailable simulators
+- `POST /erase?devices={name,name2}`  (`simctl erase name name2`) - Erase one or more simulators by name (comma separated)
+- `POST /erase/:devicename`  (`simctl erase :devicename`) - Erase single device
+- `POST /erase/all`  (`simctl erase all`) - Erase all simulators
 - `GET  /list`  (`simctl list`) - list all devices, device types, pairs, and runtimes
 - `GET  /list/devices` (`simctl list devices`) - list devices
 - `GET  /list/devicetypes` (`simctl list devicetypes`) - list device types
@@ -43,7 +47,7 @@ Complete - delete   Delete spcified devices, unavailable devices, or all devices
 pair                Create a new watch and phone pair.
 unpair              Unpair a watch and phone pair.
 pair_activate       Set a given pair as active.
-erase               Erase a device's contents and settings.
+Complete - erase    Erase a device's contents and settings.
 boot                Boot a device.
 shutdown            Shutdown a device.
 rename              Rename a device.
@@ -73,6 +77,7 @@ keychain            Manipulate a device's keychain
 ```
 
 - `/list` - add search term query
+- Add Test Clean Up Helper
 
 - Add Build environment for testing
 - Implement GET endpoints
