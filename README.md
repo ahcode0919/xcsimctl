@@ -77,9 +77,7 @@ keychain            Manipulate a device's keychain
 ```
 
 - `/list` - add search term query
-- Add Test Clean Up Helper
 
-- Add Build environment for testing
 - Implement GET endpoints
 - Implement Post (string data) endpoints
 - Implement "Upload" endpoints
