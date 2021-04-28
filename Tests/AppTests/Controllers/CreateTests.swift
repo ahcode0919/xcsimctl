@@ -12,18 +12,19 @@ import XCTVapor
 
 final class CreateTests: XCTestCase {
     var app: Application!
-    var runtimes: [AppRuntime: String]!
+    var runtimes: [RuntimeOS: String]!
     
     override func setUpWithError() throws {
         app = Application(.testing)
         try configure(app)
-        runtimes = try AppTestHelper.getAvailableRuntimes(app: app)
+        runtimes = try TestHelper.getAvailableRuntimes(app: app)
     }
     
     override func tearDownWithError() throws {
+        try TestHelper.removeTestSimulators(app: app)
         app.shutdown()
     }
-
+    
     func testCreate() throws {
         let path = try URLHelper.escape(url: "create/test/iPhone X")
         try app.test(.POST, path, afterResponse: { res in
