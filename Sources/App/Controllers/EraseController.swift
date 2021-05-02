@@ -5,6 +5,7 @@
 //  Created by Aaron Hinton on 4/21/21.
 //
 
+import Fast
 import Vapor
 
 //Erase a device's contents and settings.
