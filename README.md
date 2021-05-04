@@ -19,6 +19,7 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 ## Supported Endpoints
 
 - `GET  /` - App information
+- `POST /clone/:devicename/:newdevicename` (`simctl clone devicename newdevicename`) - Clone simulator
 - `POST /create/:name/:devicetype`  (`simctl create name devicetype`) - Create simulator with specified devicetype
 - `POST /create/:name/:devicetype/?runtime=`  (`simctl create name devicetype runtime`) - Create simulator with specified devicetype and runtime
 - `POST /delete?devices={name,name2}`  (`simctl delete name name2`) - Delete one or more simulators by name (comma separated)
@@ -41,7 +42,7 @@ Project currently under development
 
 ```
 Complete - create   Create a new device.
-clone               Clone an existing device.
+Complete - clone    Clone an existing device.
 upgrade             Upgrade a device to a newer runtime.
 Complete - delete   Delete spcified devices, unavailable devices, or all devices.
 pair                Create a new watch and phone pair.

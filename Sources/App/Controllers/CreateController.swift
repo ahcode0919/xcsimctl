@@ -52,7 +52,7 @@ class CreateController: RouteCollection {
             outputString = String(outputStrings[1])
         }
         
-        guard let deviceUUID = UUID(uuidString: outputString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+        guard let deviceUUID = UUID(uuidString: outputString.chomp()) else {
             if let outputString = String(data: output, encoding: .utf8) {
                 throw SimctlError.commandError("\(CreateError.findError(outputString).message)")
             }
