@@ -19,9 +19,10 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 ## Supported Endpoints
 
 - `GET  /` - App information
-- `POST /clone/:devicename/:newdevicename` (`simctl clone devicename newdevicename`) - Clone simulator
-- `POST /create/:name/:devicetype`  (`simctl create name devicetype`) - Create simulator with specified devicetype
-- `POST /create/:name/:devicetype/?runtime=`  (`simctl create name devicetype runtime`) - Create simulator with specified devicetype and runtime
+- `POST /boot/:devicename` (`simctl boot :devicename`) - Boot simulator
+- `POST /clone/:devicename/:newdevicename` (`simctl clone :devicename :newdevicename`) - Clone simulator
+- `POST /create/:name/:devicetype`  (`simctl create :name :devicetype`) - Create simulator with specified devicetype
+- `POST /create/:name/:devicetype/?runtime=`  (`simctl create :name :devicetype runtime`) - Create simulator with specified devicetype and runtime
 - `POST /delete?devices={name,name2}`  (`simctl delete name name2`) - Delete one or more simulators by name (comma separated)
 - `POST /delete/:devicename`  (`simctl delete :devicename`) - Erase single device
 - `POST /delete/all`  (`simctl delete all`) - Delete all simulators
@@ -49,7 +50,7 @@ pair                Create a new watch and phone pair.
 unpair              Unpair a watch and phone pair.
 pair_activate       Set a given pair as active.
 Complete - erase    Erase a device's contents and settings.
-boot                Boot a device.
+Complete - boot     Boot a device.
 shutdown            Shutdown a device.
 rename              Rename a device.
 getenv              Print an environment variable from a running device.
