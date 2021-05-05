@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "Fast",
+        "repositoryURL": "https://github.com/ahcode0919/Fast.git",
+        "state": {
+          "branch": null,
+          "revision": "8de1ac417b8e7623c324d4986eb5af795432b64c",
+          "version": "0.0.3"
+        }
+      },
+      {
         "package": "multipart-kit",
         "repositoryURL": "https://github.com/vapor/multipart-kit.git",
         "state": {

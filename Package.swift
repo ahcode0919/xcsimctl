@@ -7,13 +7,14 @@ let package = Package(
        .macOS(.v10_15)
     ],
     dependencies: [
-        // 💧 A server-side Swift web framework.
+        .package(url: "https://github.com/ahcode0919/Fast.git", from: "0.0.3"),
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
     ],
     targets: [
         .target(
             name: "App",
             dependencies: [
+                .product(name: "Fast", package: "Fast"),
                 .product(name: "Vapor", package: "vapor")
             ],
             swiftSettings: [

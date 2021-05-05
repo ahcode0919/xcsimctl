@@ -5,7 +5,7 @@
 //  Created by Aaron Hinton on 4/18/21.
 //
 
-import Foundation
+import Fast 
 import Vapor
 
 //Delete spcified devices, unavailable devices, or all devices.
