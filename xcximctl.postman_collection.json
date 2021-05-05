@@ -23,6 +23,43 @@
 			"response": []
 		},
 		{
+			"name": "boot/:devicename",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/boot/test",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"boot",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "clone/:devicename/:newdevicename",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/clone/test/newtest",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clone",
+						"test",
+						"newtest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "create/:name/:devicetype",
 			"request": {
 				"method": "POST",
@@ -332,7 +369,7 @@
 	],
 	"variable": [
 		{
-			"id": "85f0628b-f83e-4391-8022-7ea34559e4ca",
+			"id": "75ff45c9-44a7-46cb-acc0-7d95fa980f09",
 			"key": "baseUrl",
 			"value": "http://127.0.0.1:8080"
 		}
