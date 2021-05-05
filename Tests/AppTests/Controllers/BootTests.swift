@@ -29,4 +29,14 @@ final class BootTests: XCTestCase {
             XCTAssertEqual(res.status, .ok)
         })
     }
+    
+    func testBootError() throws {
+        try app.test(.POST, "boot/test", afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+        })
+        try app.test(.POST, "boot/test", afterResponse: { res in
+            XCTAssertEqual(res.status, .internalServerError)
+            XCTAssertFalse(res.body.string.isEmpty)
+        })
+    }
 }
