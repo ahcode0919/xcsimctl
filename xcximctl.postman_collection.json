@@ -241,6 +241,24 @@
 			"response": []
 		},
 		{
+			"name": "shutdown/:devicename",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/shutdown/test",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"shutdown",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "list",
 			"request": {
 				"method": "GET",
@@ -369,7 +387,7 @@
 	],
 	"variable": [
 		{
-			"id": "75ff45c9-44a7-46cb-acc0-7d95fa980f09",
+			"id": "28799583-26e4-4276-af27-9e768775b588",
 			"key": "baseUrl",
 			"value": "http://127.0.0.1:8080"
 		}
