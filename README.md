@@ -36,6 +36,7 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 - `GET  /list/pairs` (`simctl list pairs`) - list device pairs
 - `GET  /list/runtimes` (`simctl list runtimes`) - list runtimes
 - `GET  /ping` - Verify healthy server
+- `POST /rename/:devicename/:newname` (`simctl rename :devicename :newname`) - Rename simulator
 - `POST /shutdown/:devicename` (`simctl shutdown :devicename`) - Shutdown simulator
 - `POST /shutdown/all` (`simctl shutdown all`) - Shutdown all simulators
 
