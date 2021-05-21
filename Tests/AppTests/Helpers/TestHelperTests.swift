@@ -61,6 +61,16 @@ final class TestHelperTests: XCTestCase {
         XCTAssertFalse(devicesPresent)
     }
     
+    func testDeviceExists() throws {
+        try TestHelper.createTestSimulators(app: app, simulators: [("test", "iPhone X")])
+        let deviceExists = try TestHelper.deviceExists(app: app, named: "test")
+        XCTAssertTrue(deviceExists)
+        
+        addTeardownBlock { [weak self] in
+            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: ["test"])
+        }
+    }
+    
     func testFilterDeviceTypes() throws {
         let deviceTypes = try TestHelper.getDeviceTypes(app: app)
         let output = try TestHelper.filterDeviceTypes(deviceTypes: deviceTypes)

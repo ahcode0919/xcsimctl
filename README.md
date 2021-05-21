@@ -54,7 +54,7 @@ pair_activate       Set a given pair as active.
 Complete - erase    Erase a device's contents and settings.
 Complete - boot     Boot a device.
 Complete - shutdown Shutdown a device.
-rename              Rename a device.
+Complete - rename   Rename a device.
 getenv              Print an environment variable from a running device.
 openurl             Open a URL in a device.
 addmedia            Add photos, live photos, videos, or contacts to the library of a device.
