@@ -25,32 +25,33 @@ struct TestHelper {
     
     static func createTestSimulators(app: Application, simulators: [(String, String)]) throws {
         for simulator in simulators {
-            let _ = try queue.sync(execute: { () -> () in
-                let path = try URLHelper.escape(url: "create/\(simulator.0)/\(simulator.1)")
-                try app.test(.POST, path, afterResponse: { res in
-                    XCTAssertEqual(res.status, .ok)
-                })
+            let path = try URLHelper.escape(url: "create/\(simulator.0)/\(simulator.1)")
+            try app.test(.POST, path, afterResponse: { res in
+                XCTAssertEqual(res.status, .ok)
             })
         }
     }
     
     static func deleteAllSimulators(app: Application) throws {
-        let _ = try queue.sync(execute: {
-            let path = try URLHelper.escape(url: "delete/all")
-            try app.test(.POST, path, afterResponse: { res in
-                XCTAssertEqual(res.status, .ok)
-            })
+        let path = try URLHelper.escape(url: "delete/all")
+        try app.test(.POST, path, afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
         })
     }
     
     static func deleteTestSimulator(app: Application, simulators: [String]) throws {
         for simulator in simulators {
-            let _ = try queue.sync(execute: {
-                let path = try URLHelper.escape(url: "delete/\(simulator)")
-                try app.test(.POST, path, afterResponse: { res in
-                    XCTAssertEqual(res.status, .ok)
-                })
+            let path = try URLHelper.escape(url: "delete/\(simulator)")
+            try app.test(.POST, path, afterResponse: { res in
+                XCTAssertEqual(res.status, .ok)
             })
+        }
+    }
+    
+    static func deviceExists(app: Application, named name: String) throws -> Bool {
+        let devices = try Self.getDevices(app: app)
+        return devices.contains { (device) -> Bool in
+            return device.name == name
         }
     }
     
@@ -88,7 +89,6 @@ struct TestHelper {
     }
     
     static func getDefaultDeviceTypes(app: Application) throws -> [DeviceType] {
-        
         let deviceTypes = try getDeviceTypes(app: app)
         let filteredDevices = try filterDeviceTypes(deviceTypes: deviceTypes)
         var devices: [DeviceType] = []
@@ -121,28 +121,24 @@ struct TestHelper {
     }
     
     static func getDevices(app: Application) throws -> [Device] {
-        return try queue.sync { () -> [Device] in
-            var simulators: [Device] = []
-            try app.test(.GET, "list/devices", afterResponse: { res in
-                XCTAssertEqual(res.status, .ok)
-                if let devices = try? res.content.decode([String: [Device]].self) {
-                    simulators = devices.flatMap({ $0.value })
-                }
-            })
-            return simulators
-        }
+        var simulators: [Device] = []
+        try app.test(.GET, "list/devices", afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+            if let devices = try? res.content.decode([String: [Device]].self) {
+                simulators = devices.flatMap({ $0.value })
+            }
+        })
+        return simulators
     }
     
     static func getDeviceTypes(app: Application) throws -> [DeviceType] {
-        return try queue.sync { () -> [DeviceType] in
-            var deviceTypes: [DeviceType] = []
-            try app.test(.GET, "list/devicetypes", afterResponse: { res in
-                if let decodedDeviceTypes = try? res.content.decode([DeviceType].self) {
-                    deviceTypes = decodedDeviceTypes
-                }
-            })
-            return deviceTypes
-        }
+        var deviceTypes: [DeviceType] = []
+        try app.test(.GET, "list/devicetypes", afterResponse: { res in
+            if let decodedDeviceTypes = try? res.content.decode([DeviceType].self) {
+                deviceTypes = decodedDeviceTypes
+            }
+        })
+        return deviceTypes
     }
     
     static func removeTestSimulators(app: Application, prefix: String = "test") throws {

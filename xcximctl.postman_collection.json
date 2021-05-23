@@ -241,6 +241,25 @@
 			"response": []
 		},
 		{
+			"name": "rename/:name/:newname",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/rename/test/newname",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rename",
+						"test",
+						"newname"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "shutdown/:devicename",
 			"request": {
 				"method": "POST",
@@ -387,7 +406,7 @@
 	],
 	"variable": [
 		{
-			"id": "28799583-26e4-4276-af27-9e768775b588",
+			"id": "ebb43b8b-2eeb-4b2c-b08d-14f4a3043077",
 			"key": "baseUrl",
 			"value": "http://127.0.0.1:8080"
 		}

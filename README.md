@@ -36,6 +36,7 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 - `GET  /list/pairs` (`simctl list pairs`) - list device pairs
 - `GET  /list/runtimes` (`simctl list runtimes`) - list runtimes
 - `GET  /ping` - Verify healthy server
+- `POST /rename/:devicename/:newname` (`simctl rename :devicename :newname`) - Rename simulator
 - `POST /shutdown/:devicename` (`simctl shutdown :devicename`) - Shutdown simulator
 - `POST /shutdown/all` (`simctl shutdown all`) - Shutdown all simulators
 
@@ -54,7 +55,7 @@ pair_activate       Set a given pair as active.
 Complete - erase    Erase a device's contents and settings.
 Complete - boot     Boot a device.
 Complete - shutdown Shutdown a device.
-rename              Rename a device.
+Complete - rename   Rename a device.
 getenv              Print an environment variable from a running device.
 openurl             Open a URL in a device.
 addmedia            Add photos, live photos, videos, or contacts to the library of a device.
