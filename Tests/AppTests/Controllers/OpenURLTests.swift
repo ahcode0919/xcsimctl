@@ -11,7 +11,7 @@ import XCTVapor
 
 final class OpenURLTests: XCTestCase {
     var app: Application!
-    let simulator = ("test", "iPhone 8")
+    let simulator = ("testopenurl", "iPhone 8")
     
     override func setUpWithError() throws {
         app = Application(.testing)

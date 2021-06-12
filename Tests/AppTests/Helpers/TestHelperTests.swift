@@ -25,6 +25,7 @@ final class TestHelperTests: XCTestCase {
         let device = ("test", "iPhone X")
         try TestHelper.createTestSimulators(app: app, simulators: [device])
         try TestHelper.bootSimulator(app: app, device: device.0)
+        try TestHelper.waitUntilBooted(app: app, device: device.0)
         let createdDevice = try TestHelper.getDevices(app: app).first(where: { $0.name == device.0 })
         XCTAssertEqual(createdDevice?.state, "Booted")
         
