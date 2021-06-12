@@ -35,6 +35,7 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 - `GET  /list/devicetypes` (`simctl list devicetypes`) - list device types
 - `GET  /list/pairs` (`simctl list pairs`) - list device pairs
 - `GET  /list/runtimes` (`simctl list runtimes`) - list runtimes
+- `POST /openurl/:device` (`simctl openurl :device :url`) - Open URL on device
 - `GET  /ping` - Verify healthy server
 - `POST /rename/:devicename/:newdevicename` (`simctl rename :devicename :newdevicename`) - Rename simulator
 - `POST /shutdown/:device` (`simctl shutdown :device`) - Shutdown simulator
@@ -45,41 +46,57 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 Project currently under development
 
 ```
+addmedia            Add photos, live photos, videos, or contacts to the library of a device
+addphoto            Add photo
+addvideo            Add video
 appinfo             Show application information
-Complete - create   Create a new device.
-Complete - clone    Clone an existing device.
-upgrade             Upgrade a device to a newer runtime.
-Complete - delete   Delete spcified devices, unavailable devices, or all devices.
-pair                Create a new watch and phone pair.
-unpair              Unpair a watch and phone pair.
-pair_activate       Set a given pair as active.
-Complete - erase    Erase a device's contents and settings.
-Complete - boot     Boot a device.
-Complete - shutdown Shutdown a device.
-Complete - rename   Rename a device.
-getenv              Print an environment variable from a running device.
-Complete - openurl  Open a URL in a device.
-addmedia            Add photos, live photos, videos, or contacts to the library of a device.
-install             Install an app on a device.
-uninstall           Uninstall an app from a device.
+Complete - boot     Boot a device
+bootstatus          Device boot status
+Complete - create   Create a new device
+Complete - clone    Clone an existing device
+darwinup            Install a root for the specified simulator runtime
+Complete - delete   Delete spcified devices, unavailable devices, or all devices
+diagnose            Collect diagnostic information and logs
+disk                Perform disk/volume operations
+Complete - erase    Erase a device's contents and settings
 get_app_container   Print the path of the installed app's container
-launch              Launch an application by identifier on a device.
-terminate           Terminate an application by identifier on a device.
-spawn               Spawn a process by executing a given executable on a device.
-Complete - list     List available devices, device types, runtimes, or device pairs.
-icloud_sync         Trigger iCloud sync on a device.
-pbsync              Sync the pasteboard content from one pasteboard to another.
-pbcopy              Copy standard input onto the device pasteboard.
-pbpaste             Print the contents of the device's pasteboard to standard output.
-help                Prints the usage for a given subcommand.
-io                  Set up a device IO operation.
-diagnose            Collect diagnostic information and logs.
-logverbose          enable or disable verbose logging for a device
-status_bar          Set or clear status bar overrides
-ui                  Get or Set UI options
-push                Send a simulated push notification
-privacy             Grant, revoke, or reset privacy and permissions
+getenv              Print an environment variable from a running device
+help                Prints the usage for a given subcommand
+icloud_sync         Trigger iCloud sync on a device
+install             Install an app on a device
+io                  Set up a device IO operation
+keyboard            Specify keyboard locale
 keychain            Manipulate a device's keychain
+launch              Launch an application by identifier on a device
+Complete - list     List available devices, device types, runtimes, or device pairs
+listapps            List applications on device
+logverbose          enable or disable verbose logging for a device
+monitor             Print notifications as they are detected
+notify_get_state    Get the state value of a darwin notification on a device
+notify_post         Post a darwin notification on a device
+notify_set_state    Set the state value of a darwin notification on a device
+Complete - openurl  Open a URL in a device
+pair                Create a new watch and phone pair
+pair_activate       Set a given pair as active
+pbcopy              Copy standard input onto the device pasteboard
+pbinfo              pasteboard information
+pbpaste             Print the contents of the device's pasteboard to standard output
+pbsync              Sync the pasteboard content from one pasteboard to another
+privacy             Grant, revoke, or reset privacy and permissions
+push                Send a simulated push notification
+register            Register a service from one bootstrap into another
+Complete - rename   Rename a device
+reset               Reset launch subsystems
+runtime             Locate, copy, mount, and unmount simulator runtime disk images
+Complete - shutdown Shutdown a device
+spawn               Spawn a process by executing a given executable on a device
+status_bar          Set or clear status bar overrides
+terminate           Terminate an application by identifier on a device
+ui                  Get or Set UI options
+uninstall           Uninstall an app from a device
+unpair              Unpair a watch and phone pair
+unregister          Unregister a service from a device's bootstrap
+upgrade             Upgrade a device to a newer runtime
 ```
 
 - `/list` - add search term query
