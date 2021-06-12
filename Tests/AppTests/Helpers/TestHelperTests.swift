@@ -22,10 +22,10 @@ final class TestHelperTests: XCTestCase {
     }
     
     func testBootSimulator() throws {
-        let device = ("test", "iPhone X")
+        let device = ("testbooted", "iPhone X")
         try TestHelper.createTestSimulators(app: app, simulators: [device])
         try TestHelper.bootSimulator(app: app, device: device.0)
-        try TestHelper.waitUntilBooted(app: app, device: device.0, timeout: 90)
+        try TestHelper.waitUntilBooted(app: app, device: device.0)
         let createdDevice = try TestHelper.getDevices(app: app).first(where: { $0.name == device.0 })
         XCTAssertEqual(createdDevice?.state, "Booted")
         
@@ -45,13 +45,13 @@ final class TestHelperTests: XCTestCase {
     }
     
     func testCreateTestSimulators() throws {
-        let device = ("test", "iPhone X")
+        let device = ("testcreate", "iPhone X")
         try TestHelper.createTestSimulators(app: app, simulators: [device])
         let deviceCreated = try TestHelper.getDevices(app: app).contains { $0.name == device.0 }
         XCTAssertTrue(deviceCreated)
         
         addTeardownBlock { [weak self] in
-            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: ["test"])
+            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: ["testcreate"])
         }
     }
     

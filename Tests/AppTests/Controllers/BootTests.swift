@@ -20,6 +20,7 @@ final class BootTests: XCTestCase {
     }
     
     override func tearDownWithError() throws {
+        try TestHelper.shutdownSimulator(app: app, device: "test")
         try TestHelper.deleteTestSimulator(app: app, simulators: ["test"])
         app.shutdown()
     }

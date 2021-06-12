@@ -162,7 +162,7 @@ struct TestHelper {
         })
     }
     
-    static func waitUntilBooted(app: Application, device: String, timeout: TimeInterval = 30) throws {
+    static func waitUntilBooted(app: Application, device: String, timeout: TimeInterval = 60) throws {
         let start = Date()
 
         while Date().timeIntervalSince(start) < timeout {
