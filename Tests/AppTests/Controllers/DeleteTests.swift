@@ -41,7 +41,6 @@ final class DeleteTests: XCTestCase {
         let path = try URLHelper.escape(url: "delete/test")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            XCTAssertEqual(res.body.string, "")
         })
     }
     
@@ -49,13 +48,11 @@ final class DeleteTests: XCTestCase {
         var path = try URLHelper.escape(url: "delete?devices=test2")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            XCTAssertEqual(res.body.string, "")
         })
         
         path = try URLHelper.escape(url: "delete?devices=test3,test4")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            XCTAssertEqual(res.body.string, "")
         })
     }
     
@@ -71,7 +68,6 @@ final class DeleteTests: XCTestCase {
     func testDeleteUnavailable() throws {
         try app.test(.POST, "delete/unavailable", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            XCTAssertEqual(res.body.string, "")
         })
     }
 }

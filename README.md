@@ -19,16 +19,16 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 ## Supported Endpoints
 
 - `GET  /` - App information
-- `POST /boot/:devicename` (`simctl boot :devicename`) - Boot simulator
+- `POST /boot/:device` (`simctl boot :device`) - Boot simulator
 - `POST /clone/:devicename/:newdevicename` (`simctl clone :devicename :newdevicename`) - Clone simulator
 - `POST /create/:name/:devicetype`  (`simctl create :name :devicetype`) - Create simulator with specified devicetype
 - `POST /create/:name/:devicetype/?runtime=`  (`simctl create :name :devicetype runtime`) - Create simulator with specified devicetype and runtime
 - `POST /delete?devices={name,name2}`  (`simctl delete name name2`) - Delete one or more simulators by name (comma separated)
-- `POST /delete/:devicename`  (`simctl delete :devicename`) - Erase single device
+- `POST /delete/:device`  (`simctl delete :device`) - Erase single device
 - `POST /delete/all`  (`simctl delete all`) - Delete all simulators
 - `POST /delete/unavailable`  (`simctl delete unavailable`) - Delete all unavailable simulators
 - `POST /erase?devices={name,name2}`  (`simctl erase name name2`) - Erase one or more simulators by name (comma separated)
-- `POST /erase/:devicename`  (`simctl erase :devicename`) - Erase single device
+- `POST /erase/:device`  (`simctl erase :device`) - Erase single device
 - `POST /erase/all`  (`simctl erase all`) - Erase all simulators
 - `GET  /list`  (`simctl list`) - list all devices, device types, pairs, and runtimes
 - `GET  /list/devices` (`simctl list devices`) - list devices
@@ -36,8 +36,8 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 - `GET  /list/pairs` (`simctl list pairs`) - list device pairs
 - `GET  /list/runtimes` (`simctl list runtimes`) - list runtimes
 - `GET  /ping` - Verify healthy server
-- `POST /rename/:devicename/:newname` (`simctl rename :devicename :newname`) - Rename simulator
-- `POST /shutdown/:devicename` (`simctl shutdown :devicename`) - Shutdown simulator
+- `POST /rename/:devicename/:newdevicename` (`simctl rename :devicename :newdevicename`) - Rename simulator
+- `POST /shutdown/:device` (`simctl shutdown :device`) - Shutdown simulator
 - `POST /shutdown/all` (`simctl shutdown all`) - Shutdown all simulators
 
 ## Roadmap
@@ -45,6 +45,7 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 Project currently under development
 
 ```
+appinfo             Show application information
 Complete - create   Create a new device.
 Complete - clone    Clone an existing device.
 upgrade             Upgrade a device to a newer runtime.
@@ -57,7 +58,7 @@ Complete - boot     Boot a device.
 Complete - shutdown Shutdown a device.
 Complete - rename   Rename a device.
 getenv              Print an environment variable from a running device.
-openurl             Open a URL in a device.
+Complete - openurl  Open a URL in a device.
 addmedia            Add photos, live photos, videos, or contacts to the library of a device.
 install             Install an app on a device.
 uninstall           Uninstall an app from a device.

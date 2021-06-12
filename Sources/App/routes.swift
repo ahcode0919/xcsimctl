@@ -15,6 +15,7 @@ func routes(_ app: Application) throws {
     try app.register(collection: DeleteController())
     try app.register(collection: EraseController())
     try app.register(collection: ListController())
+    try app.register(collection: OpenURLController())
     try app.register(collection: RenameController())
     try app.register(collection: ShutdownController())
 }
