@@ -173,6 +173,7 @@ struct TestHelper {
             if createdDevice?.state == "Booted" {
                 return
             }
+            sleep(1)
         }
         throw TestHelperError.notBooted
     }
