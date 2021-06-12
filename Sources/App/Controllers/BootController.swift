@@ -20,14 +20,14 @@ import Vapor
 
 class BootController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        routes.post(["boot", ":devicename"], use: boot)
+        routes.post(["boot", ":device"], use: boot)
     }
     
     func boot(_ req: Request) throws -> Response {
-        guard let deviceName = req.parameters.get("devicename") else {
+        guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["Device name"])
         }
-        guard var output = String(data: shell("xcrun simctl boot \"\(deviceName)\""), encoding: .utf8) else {
+        guard var output = String(data: shell("xcrun simctl boot \"\(device)\""), encoding: .utf8) else {
             throw SimctlError.parseError()
         }
         output = output.chomp()

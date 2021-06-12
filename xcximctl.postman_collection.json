@@ -23,7 +23,7 @@
 			"response": []
 		},
 		{
-			"name": "boot/:devicename",
+			"name": "boot/:device",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -128,7 +128,7 @@
 			"response": []
 		},
 		{
-			"name": "delete/:devicename",
+			"name": "delete/:device",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -182,7 +182,7 @@
 			"response": []
 		},
 		{
-			"name": "erase/:devicename",
+			"name": "erase/:device",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -241,6 +241,33 @@
 			"response": []
 		},
 		{
+			"name": "openurl/:device",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.google.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/openurl/test",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"openurl",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "rename/:name/:newname",
 			"request": {
 				"method": "POST",
@@ -260,7 +287,7 @@
 			"response": []
 		},
 		{
-			"name": "shutdown/:devicename",
+			"name": "shutdown/:device",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -406,7 +433,6 @@
 	],
 	"variable": [
 		{
-			"id": "ebb43b8b-2eeb-4b2c-b08d-14f4a3043077",
 			"key": "baseUrl",
 			"value": "http://127.0.0.1:8080"
 		}

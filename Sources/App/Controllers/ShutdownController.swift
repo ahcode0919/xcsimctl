@@ -15,15 +15,15 @@ import Vapor
 
 class ShutdownController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        routes.post(["shutdown", ":devicename"], use: shutdown)
+        routes.post(["shutdown", ":device"], use: shutdown)
         routes.post(["shutdown", "all"], use: shutdownAll)
     }
     
     func shutdown(_ req: Request) throws -> Response {
-        guard let deviceName = req.parameters.get("devicename") else {
+        guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["Device name"])
         }
-        guard var output = String(data: shell("xcrun simctl shutdown \"\(deviceName)\""), encoding: .utf8) else {
+        guard var output = String(data: shell("xcrun simctl shutdown \"\(device)\""), encoding: .utf8) else {
             throw SimctlError.parseError()
         }
         output = output.chomp()

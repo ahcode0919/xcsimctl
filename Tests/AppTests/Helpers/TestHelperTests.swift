@@ -21,6 +21,19 @@ final class TestHelperTests: XCTestCase {
         app.shutdown()
     }
     
+    func testBootSimulator() throws {
+        let device = ("test", "iPhone X")
+        try TestHelper.createTestSimulators(app: app, simulators: [device])
+        try TestHelper.bootSimulator(app: app, device: device.0)
+        let createdDevice = try TestHelper.getDevices(app: app).first(where: { $0.name == device.0 })
+        XCTAssertEqual(createdDevice?.state, "Booted")
+        
+        addTeardownBlock { [weak self] in
+            try? TestHelper.shutdownSimulator(app: self!.app, device: device.0)
+            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: [device.0])
+        }
+    }
+    
     func testCreateDefaultSimulators() throws {
         try TestHelper.deleteAllSimulators(app: app)
         try TestHelper.createDefaultSimulators(app: app)
@@ -120,5 +133,22 @@ final class TestHelperTests: XCTestCase {
         try TestHelper.removeTestSimulators(app: app)
         let updatedDevices = try TestHelper.getDevices(app: app)
         XCTAssertGreaterThan(devices.count, updatedDevices.count)
+    }
+    
+    func testShutdownSimulator() throws {
+        let device = ("test", "iPhone X")
+        try TestHelper.createTestSimulators(app: app, simulators: [device])
+        try TestHelper.bootSimulator(app: app, device: device.0)
+        try TestHelper.shutdownSimulator(app: app, device: device.0)
+        let createdDevice = try TestHelper.getDevices(app: app).first(where: { $0.name == device.0 })
+        XCTAssertEqual(createdDevice?.state, "Shutdown")
+        
+        addTeardownBlock { [weak self] in
+            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: [device.0])
+        }
+    }
+    
+    func testWaitUntilBooted() throws {
+        
     }
 }

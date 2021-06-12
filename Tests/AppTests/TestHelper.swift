@@ -15,6 +15,13 @@ struct TestHelper {
     static let iPhoneDevices = 10
     private static let queue = DispatchQueue(label: "TestHelper")
     
+    static func bootSimulator(app: Application, device: String) throws {
+        let url = try URLHelper.escape(url: "boot/\(device)")
+        try app.test(.POST, url, afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+        })
+    }
+    
     static func createDefaultSimulators(app: Application) throws {
         let deviceTypes = try getDefaultDeviceTypes(app: app)
         let simulators = deviceTypes.map { (device) -> (String, String) in
@@ -73,19 +80,17 @@ struct TestHelper {
     }
     
     static func getAvailableRuntimes(app: Application) throws -> [RuntimeOS: String] {
-        return try queue.sync {
-            var runtimes: [RuntimeOS: String] = [:]
-            try app.test(.GET, "list/runtimes", afterResponse: { res in
-                if let runtimesResponse = try? res.content.decode([Runtime].self) {
-                    for runtime in runtimesResponse {
-                        if let appRuntime = RuntimeOS.getRuntimeOS(runtime: runtime.name) {
-                            runtimes[appRuntime] = runtime.name.replacingOccurrences(of: " ", with: "")
-                        }
+        var runtimes: [RuntimeOS: String] = [:]
+        try app.test(.GET, "list/runtimes", afterResponse: { res in
+            if let runtimesResponse = try? res.content.decode([Runtime].self) {
+                for runtime in runtimesResponse {
+                    if let appRuntime = RuntimeOS.getRuntimeOS(runtime: runtime.name) {
+                        runtimes[appRuntime] = runtime.name.replacingOccurrences(of: " ", with: "")
                     }
                 }
-            })
-            return runtimes
-        }
+            }
+        })
+        return runtimes
     }
     
     static func getDefaultDeviceTypes(app: Application) throws -> [DeviceType] {
@@ -149,4 +154,31 @@ struct TestHelper {
             }
         }
     }
+    
+    static func shutdownSimulator(app: Application, device: String) throws {
+        let url = try URLHelper.escape(url: "shutdown/\(device)")
+        try app.test(.POST, url, afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+        })
+    }
+    
+    static func waitUntilBooted(app: Application, device: String, timeout: TimeInterval = 30) throws {
+        let start = Date()
+
+        while Date().timeIntervalSince(start) < timeout {
+            let createdDevice = try Self.getDevices(app: app).first(where: { $0.name == device })
+            if createdDevice == nil {
+                throw TestHelperError.deviceNotCreated
+            }
+            if createdDevice?.state == "Booted" {
+                return
+            }
+        }
+        throw TestHelperError.notBooted
+    }
+}
+
+enum TestHelperError: Error {
+    case deviceNotCreated
+    case notBooted
 }

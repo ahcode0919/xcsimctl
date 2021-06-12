@@ -17,11 +17,11 @@ class EraseController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.post("erase", use: eraseDevices)
         routes.post(["erase", "all"], use: eraseAll)
-        routes.post(["erase", ":devicename"], use: erase)
+        routes.post(["erase", ":device"], use: erase)
     }
     
     func erase(_ req: Request) throws -> Response {
-        guard let device = req.parameters.get("devicename") else {
+        guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["device name"])
         }
         guard var output = String(data: shell("xcrun simctl erase \"\(device)\""), encoding: .utf8) else {

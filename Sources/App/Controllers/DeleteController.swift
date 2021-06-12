@@ -16,13 +16,13 @@ import Vapor
 class DeleteController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.post("delete", use: deleteDevices)
-        routes.post(["delete", ":devicename"], use: delete)
+        routes.post(["delete", ":device"], use: delete)
         routes.post(["delete", "all"], use: deleteAll)
         routes.post(["delete", "unavailable"], use: deleteUnavailable)
     }
     
     func delete(_ req: Request) throws -> Response {
-        guard let device = req.parameters.get("devicename") else {
+        guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["Device name"])
         }
         guard var output = String(data: shell("xcrun simctl delete \"\(device)\""), encoding: .utf8) else {
