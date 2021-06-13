@@ -49,7 +49,7 @@ Project currently under development
 addmedia            Add photos, live photos, videos, or contacts to the library of a device
 addphoto            Add photo
 addvideo            Add video
-appinfo             Show application information
+Complete - appinfo  Show application information
 Complete - boot     Boot a device
 bootstatus          Device boot status
 Complete - create   Create a new device
@@ -100,7 +100,6 @@ upgrade             Upgrade a device to a newer runtime
 ```
 
 - `/list` - add search term query
-
 - Implement GET endpoints
 - Implement Post (string data) endpoints
 - Implement "Upload" endpoints

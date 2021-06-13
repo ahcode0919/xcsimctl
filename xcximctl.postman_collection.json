@@ -23,6 +23,25 @@
 			"response": []
 		},
 		{
+			"name": "appinfo/:device/:bundleIdentifier",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/appinfo/test/com.apple.mobilesafari",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"appinfo",
+						"test",
+						"com.apple.mobilesafari"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "boot/:device",
 			"request": {
 				"method": "POST",

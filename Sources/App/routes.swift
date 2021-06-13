@@ -9,6 +9,7 @@ func routes(_ app: Application) throws {
         return Response(status: .ok)
     }
     
+    try app.register(collection: AppInfoController())
     try app.register(collection: BootController())
     try app.register(collection: CloneController())
     try app.register(collection: CreateController())
