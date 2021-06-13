@@ -56,8 +56,8 @@ Complete - create   Create a new device
 Complete - clone    Clone an existing device
 darwinup            Install a root for the specified simulator runtime
 Complete - delete   Delete spcified devices, unavailable devices, or all devices
-diagnose            Collect diagnostic information and logs
-disk                Perform disk/volume operations
+Skip - diagnose     Collect diagnostic information and logs
+Skip - disk         Perform disk/volume operations
 Complete - erase    Erase a device's contents and settings
 get_app_container   Print the path of the installed app's container
 getenv              Print an environment variable from a running device
@@ -84,7 +84,7 @@ pbpaste             Print the contents of the device's pasteboard to standard ou
 pbsync              Sync the pasteboard content from one pasteboard to another
 privacy             Grant, revoke, or reset privacy and permissions
 push                Send a simulated push notification
-register            Register a service from one bootstrap into another
+Skip - register     Register a service from one bootstrap into another
 Complete - rename   Rename a device
 reset               Reset launch subsystems
 runtime             Locate, copy, mount, and unmount simulator runtime disk images
