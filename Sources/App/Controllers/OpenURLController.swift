@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 
 // Open a URL in a device.
@@ -20,15 +21,17 @@ class OpenURLController: RouteCollection {
         guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["Device"])
         }
-        guard let url = try? req.content.decode(OpenURL.self).url else {
+        guard let url = try? req.content.decode(OpenURLRequest.self).url else {
             throw SimctlError.missingRouteParameters(["URL"])
         }
-        guard var output = String(data: shell("xcrun simctl openurl \"\(device)\" \"\(url)\""), encoding: .utf8) else {
+        
+        let args = ["simctl", "openurl", device, url]
+        
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         

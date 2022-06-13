@@ -6,6 +6,7 @@
 //
 
 import Fast
+import SwiftShell
 import Vapor
 
 //Erase a device's contents and settings.
@@ -24,45 +25,49 @@ class EraseController: RouteCollection {
         guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["device name"])
         }
-        guard var output = String(data: shell("xcrun simctl erase \"\(device)\""), encoding: .utf8) else {
+
+        let args = ["simctl", "erase", device]
+
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         return Response(status: .ok)
     }
     
     func eraseAll(_ req: Request) throws -> Response {
-        guard var output = String(data: shell("xcrun simctl erase all"), encoding: .utf8) else {
+        let args = ["simctl", "erase", "all"]
+
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         return Response(status: .ok)
     }
     
     func eraseDevices(_ req: Request) throws -> Response {
-        var command = "xcrun simctl erase"
-        guard let eraseQuery = try? req.query.decode(EraseQuery.self) else {
-                throw SimctlError.commandError()
+        var args = ["simctl", "erase"]
+        let eraseQuery = try req.query.decode(EraseQuery.self)
+
+        guard let devices = eraseQuery.devices else {
+            throw SimctlError.commandError()
         }
         
-        for device in eraseQuery.devices ?? [] {
-            command.append(" \"\(device)\"")
+        for device in devices {
+            args.append(device)
         }
 
-        guard var output = String(data: shell(command), encoding: .utf8) else {
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         return Response(status: .ok)

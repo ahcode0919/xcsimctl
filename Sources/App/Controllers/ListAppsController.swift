@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 
 // Show the installed applications.

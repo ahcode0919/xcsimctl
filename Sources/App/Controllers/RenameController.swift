@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 
 // Rename a device.
@@ -23,13 +24,14 @@ class RenameController: RouteCollection {
         guard let newName = req.parameters.get("newname") else {
             throw SimctlError.missingRouteParameters(["New name"])
         }
-        guard var output = String(data: shell("xcrun simctl rename \"\(deviceName)\" \"\(newName)\""),
-                                  encoding: .utf8) else {
+        
+        let args = ["simctl", "rename", deviceName, newName]
+        
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         

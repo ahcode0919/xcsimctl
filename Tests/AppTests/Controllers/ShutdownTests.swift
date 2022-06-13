@@ -11,21 +11,28 @@ import XCTVapor
 
 final class ShutdownTests: XCTestCase {
     var app: Application!
+    var simulator: Simulator!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
+
         app = Application(.testing)
+        simulator = Simulator(device: .test(), type: .iPhone8)
+        
         try configure(app)
-        try TestHelper.createTestSimulators(app: app, simulators: [("test", "iPhone 8")])
-        try app.test(.POST, "boot/test")
+        try TestHelper.createTestSimulators(app: app, simulators: [simulator])
+        try app.test(.POST, "boot/\(simulator.device.name)")
     }
     
     override func tearDownWithError() throws {
-        try TestHelper.deleteTestSimulator(app: app, simulators: ["test"])
+        try TestHelper.removeTestSimulators(app: app)
         app.shutdown()
+        
+        try super.tearDownWithError()
     }
 
     func testShutdown() throws {
-        try app.test(.POST, "shutdown/test", afterResponse: { res in
+        try app.test(.POST, "shutdown/\(simulator.device.name)", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
         })
     }
@@ -37,12 +44,14 @@ final class ShutdownTests: XCTestCase {
     }
     
     func testShutdownError() throws {
-        try app.test(.POST, "shutdown/test", afterResponse: { res in
+        try app.test(.POST, "shutdown/\(simulator.device.name)", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
         })
-        try app.test(.POST, "shutdown/test", afterResponse: { res in
+        try app.test(.POST, "shutdown/\(simulator.device.name)", afterResponse: { res in
             XCTAssertEqual(res.status, .internalServerError)
-            XCTAssertFalse(res.body.string.isEmpty)
+            
+            let error = try res.content.decode(ErrorResponse.self)
+            XCTAssertContains(error.reason, "Unable to shutdown device")
         })
     }
 }

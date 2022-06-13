@@ -12,17 +12,23 @@ import XCTVapor
 
 final class ListTests: XCTestCase {
     var app: Application!
+    var test: Simulator!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
+
         app = Application(.testing)
+        test = Simulator(device: .test(), type: .iPhone8)
+
         try configure(app)
-        let path = try URLHelper.escape(url: "create/test/iPhone X")
-        try app.test(.POST, path)
+        try TestHelper.createTestSimulators(app: app, simulators: [test])
     }
     
     override func tearDownWithError() throws {
-        try app.test(.POST, "delete?named=test")
+        try app.test(.POST, "delete?named=\(test.device.name)")
         app.shutdown()
+        
+        try super.tearDownWithError()
     }
     
     func testList() throws {

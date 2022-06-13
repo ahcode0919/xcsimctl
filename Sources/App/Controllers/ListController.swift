@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 
 //List available devices, device types, runtimes, or device pairs.
@@ -24,44 +25,59 @@ class ListController: RouteCollection {
     }
     
     func listAll(_ req: Request) throws -> DeviceList {
-        let output = shell("xcrun simctl list --json")
-        guard let deviceList = try? JSONDecoder().decode(DeviceList.self, from: output) else {
+        let args = ["simctl", "list", "--json"]
+        let output = try Shell.execute(.xcrun, args: args)?.sanitize()
+
+        guard let data = output?.data(using: .utf8),
+              let deviceList = try? JSONDecoder().decode(DeviceList.self, from: data) else {
             throw SimctlError.parseError(nil)
         }
         return deviceList
     }
 
     func listDevices(_ req: Request) throws -> [String: [Device]] {
-        let output = shell("xcrun simctl list devices --json")
-        guard let devicesJSON = try? JSONDecoder().decode([String: [String: [Device]]].self, from: output),
-            let devices = devicesJSON["devices"] else {
+        let args = ["simctl", "list", "devices", "--json"]
+        let output = try Shell.execute(.xcrun, args: args)?.sanitize()
+
+        guard let data = output?.data(using: .utf8),
+              let devicesJSON = try? JSONDecoder().decode([String: [String: [Device]]].self, from: data),
+              let devices = devicesJSON["devices"] else {
             throw SimctlError.parseError(nil)
         }
         return devices
     }
 
     func listDeviceTypes(_ req: Request) throws -> [DeviceType] {
-        let output = shell("xcrun simctl list devicetypes --json")
-        guard let deviceTypesJSON = try? JSONDecoder().decode([String: [DeviceType]].self, from: output),
-            let deviceTypes = deviceTypesJSON["devicetypes"] else {
+        let args = ["simctl", "list", "devicetypes", "--json"]
+        let output = try Shell.execute(.xcrun, args: args)?.sanitize()
+
+        guard let data = output?.data(using: .utf8),
+              let deviceTypesJSON = try? JSONDecoder().decode([String: [DeviceType]].self, from: data),
+              let deviceTypes = deviceTypesJSON["devicetypes"] else {
             throw SimctlError.parseError(nil)
         }
         return deviceTypes
     }
 
     func listPairs(_ req: Request) throws -> [String: Pair] {
-        let output = shell("xcrun simctl list pairs --json")
-        guard let pairsJSON = try? JSONDecoder().decode([String: [String: Pair]].self, from: output),
-            let pairs = pairsJSON["pairs"] else {
+        let args = ["simctl", "list", "pairs", "--json"]
+        let output = try Shell.execute(.xcrun, args: args)?.sanitize()
+
+        guard let data = output?.data(using: .utf8),
+              let pairsJSON = try? JSONDecoder().decode([String: [String: Pair]].self, from: data),
+              let pairs = pairsJSON["pairs"] else {
             throw SimctlError.parseError(nil)
         }
         return pairs
     }
 
     func listRuntimes(_ req: Request) throws -> [Runtime] {
-        let output = shell("xcrun simctl list runtimes --json")
-        guard let runtimesJSON = try? JSONDecoder().decode([String: [Runtime]].self, from: output),
-            let runtimes = runtimesJSON["runtimes"] else {
+        let args = ["simctl", "list", "runtimes", "--json"]
+        let output = try Shell.execute(.xcrun, args: args)?.sanitize()
+
+        guard let data = output?.data(using: .utf8),
+              let runtimesJSON = try? JSONDecoder().decode([String: [Runtime]].self, from: data),
+              let runtimes = runtimesJSON["runtimes"] else {
             throw SimctlError.parseError(nil)
         }
         return runtimes

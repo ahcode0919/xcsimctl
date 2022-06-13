@@ -12,24 +12,30 @@ import XCTVapor
 
 final class EraseTests: XCTestCase {
     var app: Application!
+    var test: Simulator!
+    var test2: Simulator!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
+
         app = Application(.testing)
+        test = Simulator(device: .test(), type: .iPhone8)
+        test2 = Simulator(device: .test("2"), type: .iPhone8)
+        
         try configure(app)
-        let path = try URLHelper.escape(url: "create/test/iPhone X")
-        let path2 = try URLHelper.escape(url: "create/test2/iPhone X")
-        try app.test(.POST, path)
-        try app.test(.POST, path2)
+        try TestHelper.createTestSimulators(app: app, simulators: [test, test2])
     }
     
     override func tearDownWithError() throws {
-        try app.test(.POST, "delete/test")
-        try app.test(.POST, "delete/test2")
+        try TestHelper.removeTestSimulators(app: app)
         app.shutdown()
+        
+        try super.tearDownWithError()
     }
 
     func testErase() throws {
-        let path = try URLHelper.escape(url: "erase/test")
+        let path = try URLHelper.escape(url: "erase/\(test.device.name)")
+
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, "")
@@ -44,12 +50,12 @@ final class EraseTests: XCTestCase {
     }
     
     func testEraseDevices() throws {
-        try app.test(.POST, "erase?devices=test", afterResponse: { res in
+        try app.test(.POST, "erase?devices=\(test.device.name)", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, "")
         })
         
-        try app.test(.POST, "erase?devices=test,test2", afterResponse: { res in
+        try app.test(.POST, "erase?devices=\(test.device.name),\(test.device.name)", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, "")
         })

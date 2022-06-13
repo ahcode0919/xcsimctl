@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 //
 //Clone an existing device.
@@ -23,10 +24,12 @@ class CloneController: RouteCollection {
         guard let newDeviceName = req.parameters.get("newdevicename") else {
             throw SimctlError.missingRouteParameters(["New device name"])
         }
-        guard var output = String(data: shell("xcrun simctl clone \"\(deviceName)\" \"\(newDeviceName)\""), encoding: .utf8) else {
+        
+        let args = ["simctl", "clone", deviceName, newDeviceName]
+        
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
         guard let uuid = UUID(uuidString: output) else {
             throw SimctlError.parseError("Couldn't not parse device UUID")

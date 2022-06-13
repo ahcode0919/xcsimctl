@@ -10,10 +10,9 @@ import Vapor
 
 class NotifyController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
+        routes.post(["notifypost"], use: notifyPost)
         routes.get(["notifystate"], use: notifyGetState)
         routes.post(["notifystate"], use: notifySetState)
-
-        routes.post(["notifypost"], use: notifyPost)
     }
 
     // Set the state value of a darwin notification on a device.

@@ -13,31 +13,40 @@ final class TestHelperTests: XCTestCase {
     var app: Application!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
+
         app = Application(.testing)
         try configure(app)
+        try TestHelper.removeTestSimulators(app: app)
     }
     
     override func tearDownWithError() throws {
+        try TestHelper.removeTestSimulators(app: app)
         app.shutdown()
+    
+        try super.tearDownWithError()
     }
     
     func testBootSimulator() throws {
-        let device = ("testbooted", "iPhone X")
-        try TestHelper.createTestSimulators(app: app, simulators: [device])
-        try TestHelper.bootSimulator(app: app, device: device.0)
-        try TestHelper.waitUntilBooted(app: app, device: device.0)
-        let createdDevice = try TestHelper.getDevices(app: app).first(where: { $0.name == device.0 })
+        let simulator = Simulator(device: .testBooted, type: .iPhone8)
+
+        try TestHelper.createTestSimulators(app: app, simulators: [simulator])
+        try TestHelper.bootSimulator(app: app, device: simulator.device)
+        try TestHelper.waitUntilBooted(app: app, device: simulator.device)
+
+        let createdDevice = try TestHelper.getDevices(app: app).first(where: { $0.name == simulator.device.name })
         XCTAssertEqual(createdDevice?.state, "Booted")
         
-        addTeardownBlock { [weak self] in
-            try? TestHelper.shutdownSimulator(app: self!.app, device: device.0)
-            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: [device.0])
+        addTeardownBlock { [self] in
+            try? TestHelper.shutdownSimulator(app: self.app, simulator: simulator)
+            try? TestHelper.deleteTestSimulators(app: self.app, simulators: [simulator])
         }
     }
     
     func testCreateDefaultSimulators() throws {
         try TestHelper.deleteAllSimulators(app: app)
         try TestHelper.createDefaultSimulators(app: app)
+
         let devices = try TestHelper.getDevices(app: app)
         let defaultDevices = try TestHelper.getDefaultDeviceTypes(app: app)
         XCTAssertGreaterThan(devices.count, 0)
@@ -45,13 +54,14 @@ final class TestHelperTests: XCTestCase {
     }
     
     func testCreateTestSimulators() throws {
-        let device = ("testcreate", "iPhone X")
-        try TestHelper.createTestSimulators(app: app, simulators: [device])
-        let deviceCreated = try TestHelper.getDevices(app: app).contains { $0.name == device.0 }
+        let simulator = Simulator(device: .testCreate, type: .iPhone8)
+
+        try TestHelper.createTestSimulators(app: app, simulators: [simulator])
+        let deviceCreated = try TestHelper.getDevices(app: app).contains { $0.name == simulator.device.name }
         XCTAssertTrue(deviceCreated)
         
-        addTeardownBlock { [weak self] in
-            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: ["testcreate"])
+        addTeardownBlock { [self] in
+            try? TestHelper.deleteTestSimulators(app: self.app, simulators: [simulator])
         }
     }
     
@@ -60,28 +70,33 @@ final class TestHelperTests: XCTestCase {
         let devices = try TestHelper.getDevices(app: app)
         XCTAssertEqual(devices.count, 0)
         
-        addTeardownBlock { [weak self] in
-            try? TestHelper.createDefaultSimulators(app: self!.app)
+        addTeardownBlock { [self] in
+            try? TestHelper.createDefaultSimulators(app: self.app)
         }
     }
     
     func testDeleteTestSimulator() throws {
-        let devices = [("test", "iPhone X"), ("test2", "iPhone X")]
-        try TestHelper.createTestSimulators(app: app, simulators: devices)
-        try TestHelper.deleteTestSimulator(app: app, simulators: ["test", "test2"])
+        let simulators = [
+            Simulator(device: .test(), type: .iPhone8),
+            Simulator(device: .test("2"), type: .iPhone8)
+        ]
+
+        try TestHelper.createTestSimulators(app: app, simulators: simulators)
+        try TestHelper.deleteTestSimulators(app: app, simulators: simulators)
         let devicesPresent = try TestHelper.getDevices(app: app).contains {
-            $0.name == devices[0].0 || $0.name == devices[1].0
+            $0.name == simulators[0].device.name || $0.name == simulators[1].device.name
         }
         XCTAssertFalse(devicesPresent)
     }
     
     func testDeviceExists() throws {
-        try TestHelper.createTestSimulators(app: app, simulators: [("test", "iPhone X")])
-        let deviceExists = try TestHelper.deviceExists(app: app, named: "test")
+        let simulator = Simulator(device: .test(), type: .iPhone8)
+        try TestHelper.createTestSimulators(app: app, simulators: [simulator])
+        let deviceExists = try TestHelper.deviceExists(app: app, named: simulator.device)
         XCTAssertTrue(deviceExists)
         
-        addTeardownBlock { [weak self] in
-            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: ["test"])
+        addTeardownBlock { [self] in
+            try? TestHelper.deleteTestSimulators(app: self.app, simulators: [simulator])
         }
     }
     
@@ -110,15 +125,16 @@ final class TestHelperTests: XCTestCase {
     }
     
     func testGetDevices() throws {
-        let testDevices = [("test", "iPhone X")]
-        try TestHelper.createTestSimulators(app: app, simulators: testDevices)
+        let simulator = Simulator(device: .test(), type: .iPhone8)
+        try TestHelper.createTestSimulators(app: app, simulators: [simulator])
+
         let devices = try TestHelper.getDevices(app: app)
-        let devicePresent = devices.contains { $0.name == testDevices[0].0 }
+        let devicePresent = devices.contains { $0.name == simulator.device.name }
         XCTAssertTrue(devicePresent)
         XCTAssertGreaterThan(devices.count, 1)
         
-        addTeardownBlock { [weak self] in
-            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: ["test"])
+        addTeardownBlock { [self] in
+            try? TestHelper.deleteTestSimulators(app: self.app, simulators: [simulator])
         }
     }
     
@@ -128,8 +144,12 @@ final class TestHelperTests: XCTestCase {
     }
     
     func testRemoveTestSimulators() throws {
-        let testDevice = [("test", "iPhone X"), ("test2", "iPhone X")]
-        try TestHelper.createTestSimulators(app: app, simulators: testDevice)
+        let simulators = [
+            Simulator(device: .test(), type: .iPhone8),
+                      Simulator(device: .test("2"), type: .iPhone8)
+        ]
+
+        try TestHelper.createTestSimulators(app: app, simulators: simulators)
         let devices = try TestHelper.getDevices(app: app)
         try TestHelper.removeTestSimulators(app: app)
         let updatedDevices = try TestHelper.getDevices(app: app)
@@ -137,19 +157,17 @@ final class TestHelperTests: XCTestCase {
     }
     
     func testShutdownSimulator() throws {
-        let device = ("test", "iPhone X")
-        try TestHelper.createTestSimulators(app: app, simulators: [device])
-        try TestHelper.bootSimulator(app: app, device: device.0)
-        try TestHelper.shutdownSimulator(app: app, device: device.0)
-        let createdDevice = try TestHelper.getDevices(app: app).first(where: { $0.name == device.0 })
+        let simulator = Simulator(device: .test(), type: .iPhone8)
+
+        try TestHelper.createTestSimulators(app: app, simulators: [simulator])
+        try TestHelper.bootSimulator(app: app, device: simulator.device)
+        try TestHelper.shutdownSimulator(app: app, simulator: simulator)
+
+        let createdDevice = try TestHelper.getDevices(app: app).first(where: { $0.name == simulator.device.name })
         XCTAssertEqual(createdDevice?.state, "Shutdown")
         
-        addTeardownBlock { [weak self] in
-            try? TestHelper.deleteTestSimulator(app: self!.app, simulators: [device.0])
+        addTeardownBlock { [self] in
+            try? TestHelper.deleteTestSimulators(app: self.app, simulators: [simulator])
         }
-    }
-    
-    func testWaitUntilBooted() throws {
-        
     }
 }
