@@ -23,7 +23,7 @@ final class OpenURLTests: XCTestCase {
         try TestHelper.createTestSimulators(app: app, simulators: [simulator])
         try TestHelper.bootSimulator(app: app, device: simulator.device)
         try TestHelper.waitUntilBooted(app: app, device: simulator.device)
-        sleep(5) // Delay for sim to initialize
+        sleep(30) // Delay for sim to initialize
     }
     
     override func tearDownWithError() throws {
