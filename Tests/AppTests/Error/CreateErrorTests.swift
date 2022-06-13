@@ -11,6 +11,7 @@ import Foundation
 import XCTVapor
 
 final class CreateErrorTests: XCTestCase {
+    
     func testCreateErrorMessage() throws {
         let createErrors = CreateError.allCases
         let messages: [CreateError: String] = [

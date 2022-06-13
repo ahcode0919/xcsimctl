@@ -5,7 +5,8 @@
 //  Created by Aaron Hinton on 4/18/21.
 //
 
-import Fast 
+import Fast
+import SwiftShell
 import Vapor
 
 //Delete spcified devices, unavailable devices, or all devices.
@@ -25,57 +26,61 @@ class DeleteController: RouteCollection {
         guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["Device name"])
         }
-        guard var output = String(data: shell("xcrun simctl delete \"\(device)\""), encoding: .utf8) else {
+        let args = ["simctl", "delete", device]
+
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         return Response(status: .ok)
     }
     
     func deleteAll(_ req: Request) throws -> Response {
-        guard var output = String(data: shell("xcrun simctl delete all"), encoding: .utf8) else {
+        let args = ["simctl", "delete", "all"]
+
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         return Response(status: .ok)
     }
     
     func deleteDevices(_ req: Request) throws -> Response {
-        var command = "xcrun simctl delete"
-        guard let deleteQuery = try? req.query.decode(DeleteQuery.self) else {
+        var args = ["simctl", "delete"]
+        let deleteQuery = try req.query.decode(DeleteQuery.self)
+
+        guard let devices = deleteQuery.devices else {
                 throw SimctlError.commandError()
         }
         
-        for device in deleteQuery.devices ?? [] {
-            command.append(" \"\(device)\"")
+        for device in devices {
+            args.append(device)
         }
 
-        guard var output = String(data: shell(command), encoding: .utf8) else {
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         return Response(status: .ok)
     }
     
     func deleteUnavailable(_ req: Request) throws -> Response {
-        guard var output = String(data: shell("xcrun simctl delete unavailable"), encoding: .utf8) else {
+        let args = ["simctl", "delete", "unavailable"]
+
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         return Response(status: .ok)

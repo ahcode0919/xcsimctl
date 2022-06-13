@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 
 //Usage: simctl create <name> <device type id> [<runtime id>]
@@ -35,28 +36,27 @@ class CreateController: RouteCollection {
             throw SimctlError.missingRouteParameters(["name", "devicetype"])
         }
 
-        var command = "xcrun simctl create \"\(name)\" \"\(devicetype)\""
+        var command = ["simctl", "create", name, devicetype]
         if let runtime = try? req.query.decode(CreateQuery.self).runtime {
-            command.append(" \(runtime)")
+            command.append(runtime)
         }
-        let output = shell(command)
-        guard var outputString = String(data: output, encoding: .utf8) else {
+        
+        guard var outputString = try Shell.execute(.xcrun, args: command)?.sanitize() else {
             throw SimctlError.parseError()
         }
         
         if outputString.contains("No runtime specified") {
-            let outputStrings = outputString.split(separator: "\n")
-            guard outputStrings.count > 1 else {
+            guard let udid = outputString.split(separator: "\n").last else {
                 throw SimctlError.parseError()
             }
-            outputString = String(outputStrings[1])
+            outputString = String(udid)
         }
         
         guard let deviceUUID = UUID(uuidString: outputString.chomp()) else {
-            if let outputString = String(data: output, encoding: .utf8) {
-                throw SimctlError.commandError("\(CreateError.findError(outputString).message)")
+            if outputString.isEmpty {
+                throw SimctlError.commandError(CreateError.createError.message)
             }
-            throw SimctlError.commandError(CreateError.createError.message)
+            throw SimctlError.commandError("\(CreateError.findError(outputString).message)")
         }
         return CreateResponse(uuid: deviceUUID)
     }

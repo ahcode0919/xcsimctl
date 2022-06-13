@@ -11,28 +11,30 @@ import XCTVapor
 
 final class RenameTests: XCTestCase {
     var app: Application!
+    var simulator: Simulator!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
+
         app = Application(.testing)
+        simulator = Simulator(device: .test(), type: .iPhone8)
+
         try configure(app)
-        try TestHelper.createTestSimulators(app: app, simulators: [("test", "iPhone 8")])
+        try TestHelper.createTestSimulators(app: app, simulators: [simulator])
     }
     
-    override func tearDownWithError() throws {
-        let devices = ["renamed-test", "test"]
-        
-        for device in devices {
-            if (try? TestHelper.deviceExists(app: self.app, named: device)) ?? false {
-                try? TestHelper.deleteTestSimulator(app: self.app, simulators: [device])
-            }
-        }
+    override func tearDownWithError() throws {        
+        try TestHelper.removeTestSimulators(app: app)
         app.shutdown()
+        
+        try super.tearDownWithError()
     }
 
     func testRename() throws {
-        try app.test(.POST, "rename/test/renamed-test", afterResponse: { res in
+        let device: TestDevice = .testRenamed
+        try app.test(.POST, "rename/\(simulator.device.name)/\(device.name)", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
         })
-        XCTAssertTrue(try TestHelper.deviceExists(app: app, named: "renamed-test"))
+        XCTAssertTrue(try TestHelper.deviceExists(app: app, named: device))
     }
 }

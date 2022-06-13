@@ -14,12 +14,16 @@ final class DeleteAllTests: XCTestCase {
     var app: Application!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
+
         app = Application(.testing)
         try configure(app)
     }
     
     override func tearDownWithError() throws {
         app.shutdown()
+        
+        try super.tearDownWithError()
     }
 
     func testDeleteAll() throws {

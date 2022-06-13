@@ -7,7 +7,7 @@ DerivedData/
 .DS_Store
 db.sqlite
 .swiftpm
-
+Package.resolved
 
 # Logs
 logs

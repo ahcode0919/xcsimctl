@@ -13,9 +13,13 @@ import XCTVapor
 final class CreateTests: XCTestCase {
     var app: Application!
     var runtimes: [RuntimeOS: String]!
+    var simulator: Simulator!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
+
         app = Application(.testing)
+        simulator = Simulator(device: .test(), type: .iPhone8)
         try configure(app)
         runtimes = try TestHelper.getAvailableRuntimes(app: app)
     }
@@ -23,10 +27,13 @@ final class CreateTests: XCTestCase {
     override func tearDownWithError() throws {
         try TestHelper.removeTestSimulators(app: app)
         app.shutdown()
+
+        try super.tearDownWithError()
     }
     
     func testCreate() throws {
-        let path = try URLHelper.escape(url: "create/test/iPhone X")
+        let path = try URLHelper.escape(url: "create/\(simulator.device.name)/\(simulator.type.name)")
+
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertNoThrow(try res.content.decode(CreateResponse.self))
@@ -34,7 +41,10 @@ final class CreateTests: XCTestCase {
     }
     
     func testCreateWithRuntime() throws {
-        let path = try URLHelper.escape(url: "create/test/iPhone X?runtime=\(runtimes[.ios]!)")
+        let runtime = try XCTUnwrap(runtimes[.ios])
+        let url = "create/\(simulator.device.name)/\(simulator.type.name)?runtime=\(runtime)"
+        let path = try URLHelper.escape(url: url)
+
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertNoThrow(try res.content.decode(CreateResponse.self))
@@ -42,25 +52,34 @@ final class CreateTests: XCTestCase {
     }
     
     func testIncompatibleDeviceTypeAndRuntime() throws {
-        let path = try URLHelper.escape(url: "create/test/iPhone X?runtime=\(runtimes[.tvos]!)")
+        let runtime = try XCTUnwrap(runtimes[.tvos])
+        let url = "create/\(simulator.device.name)/\(simulator.type.name)?runtime=\(runtime)"
+        let path = try URLHelper.escape(url: url)
+
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .internalServerError)
-            XCTAssertContains(res.body.string, CreateError.incompatibleDevice.message)
+
+            let errorResponse = try res.content.decode(ErrorResponse.self)
+            XCTAssertContains(errorResponse.reason, CreateError.incompatibleDevice.message)
         })
     }
     
     func testInvalidDeviceType() throws {
-        try app.test(.POST, "create/test/foo", afterResponse: { res in
+        try app.test(.POST, "create/\(simulator.device.name)/foo", afterResponse: { res in
             XCTAssertEqual(res.status, .internalServerError)
-            XCTAssertContains(res.body.string, CreateError.invalidDeviceType.message)
+
+            let errorResponse = try res.content.decode(ErrorResponse.self)
+            XCTAssertContains(errorResponse.reason, CreateError.invalidDeviceType.message)
         })
     }
     
     func testInvalidRuntime() throws {
-        let path = try URLHelper.escape(url: "/create/test/iPhone X?runtime=foo")
+        let path = try URLHelper.escape(url: "/create/\(simulator.device.name)/\(simulator.type.name)?runtime=foo")
         try app.test(.POST, path, afterResponse: { res in
             XCTAssertEqual(res.status, .internalServerError)
-            XCTAssertContains(res.body.string, CreateError.invalidRuntime.message)
+
+            let errorResponse = try res.content.decode(ErrorResponse.self)
+            XCTAssertContains(errorResponse.reason, CreateError.invalidRuntime.message)
         })
     }
     

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 
 //Shutdown a device.
@@ -23,12 +24,14 @@ class ShutdownController: RouteCollection {
         guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["Device name"])
         }
-        guard var output = String(data: shell("xcrun simctl shutdown \"\(device)\""), encoding: .utf8) else {
+        
+        let args = ["simctl", "shutdown", device]
+        
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         
@@ -36,12 +39,13 @@ class ShutdownController: RouteCollection {
     }
     
     func shutdownAll(_ req: Request) throws -> Response {
-        guard var output = String(data: shell("xcrun simctl shutdown all"), encoding: .utf8) else {
+        let args = ["simctl", "shutdown", "all"]
+
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
+        guard output.isEmpty else {
             throw SimctlError.error(output)
         }
         

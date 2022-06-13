@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 
 //Boot a device.
@@ -16,27 +17,30 @@ import Vapor
 //                            Multiple jobs can be enabled by passing multiple flags.
 //
 //
-//If you want to set environment variables in the resulting environment, set them in the calling environment with a SIMCTL_CHILD_ prefix.
+// If you want to set environment variables in the resulting environment,
+// set them in the calling environment with a SIMCTL_CHILD_ prefix.
 
 class BootController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.post(["boot", ":device"], use: boot)
     }
     
-    func boot(_ req: Request) throws -> Response {
+    func boot(_ req: Request) throws -> SimctlResponse {
         guard let device = req.parameters.get("device") else {
             throw SimctlError.missingRouteParameters(["Device name"])
         }
-        guard var output = String(data: shell("xcrun simctl boot \"\(device)\""), encoding: .utf8) else {
+        
+        let args = ["simctl", "boot", device]
+        
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
-        guard output == "" else {
-            throw SimctlError.error(output)
+        if output.isEmpty {
+            return SimctlResponse(simctlOutput: nil)
         }
         
-        return Response(status: .ok)
+        return SimctlResponse(simctlOutput: output)
     }
 }
 

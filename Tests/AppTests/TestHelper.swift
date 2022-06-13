@@ -9,14 +9,51 @@ import Foundation
 @testable import App
 import XCTVapor
 
+typealias DeviceName = String
+
+enum TestDevice {
+    case test(String? = nil)
+    case testAppInfo
+    case testBooted
+    case testCreate
+    case testDevice(String)
+    case testOpenURL
+    case testRenamed
+    
+    static let prefix = "test"
+    
+    var name: DeviceName {
+        switch self {
+        case .test(let id):
+            if let id = id {
+                return "test\(id)"
+            }
+            return "test"
+        case .testAppInfo:
+            return "testappinfo"
+        case .testBooted:
+            return "testbooted"
+        case .testCreate:
+            return "testcreate"
+        case .testDevice(let name):
+            return name
+        case .testOpenURL:
+            return "testopenurl"
+        case .testRenamed:
+            return "testrenamed"
+        }
+    }
+}
+
 struct TestHelper {
     static let appleWatchDevices = 4
     static let iPadDevices = 4
     static let iPhoneDevices = 10
+
     private static let queue = DispatchQueue(label: "TestHelper")
     
-    static func bootSimulator(app: Application, device: String) throws {
-        let url = try URLHelper.escape(url: "boot/\(device)")
+    static func bootSimulator(app: Application, device: TestDevice) throws {
+        let url = try URLHelper.escape(url: "boot/\(device.name)")
         try app.test(.POST, url, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
         })
@@ -24,15 +61,15 @@ struct TestHelper {
     
     static func createDefaultSimulators(app: Application) throws {
         let deviceTypes = try getDefaultDeviceTypes(app: app)
-        let simulators = deviceTypes.map { (device) -> (String, String) in
-            return (device.name, device.name)
+        let simulators: [Simulator] = deviceTypes.map { (device) -> Simulator in
+            return Simulator(device: .testDevice(device.name), type: .custom(device.name))
         }
         try createTestSimulators(app: app, simulators: simulators)
     }
     
-    static func createTestSimulators(app: Application, simulators: [(String, String)]) throws {
+    static func createTestSimulators(app: Application, simulators: [Simulator]) throws {
         for simulator in simulators {
-            let path = try URLHelper.escape(url: "create/\(simulator.0)/\(simulator.1)")
+            let path = try URLHelper.escape(url: "create/\(simulator.device.name)/\(simulator.type.name)")
             try app.test(.POST, path, afterResponse: { res in
                 XCTAssertEqual(res.status, .ok)
             })
@@ -46,19 +83,22 @@ struct TestHelper {
         })
     }
     
-    static func deleteTestSimulator(app: Application, simulators: [String]) throws {
+    static func deleteTestSimulators(app: Application, simulators: [Simulator]) throws {
         for simulator in simulators {
-            let path = try URLHelper.escape(url: "delete/\(simulator)")
-            try app.test(.POST, path, afterResponse: { res in
-                XCTAssertEqual(res.status, .ok)
-            })
+            while try Self.deviceExists(app: app, named: simulator.device) {
+                let path = try URLHelper.escape(url: "delete/\(simulator.device.name)")
+                try app.test(.POST, path, afterResponse: { res in
+                    XCTAssertEqual(res.status, .ok)
+                })
+                sleep(1)
+            }
         }
     }
     
-    static func deviceExists(app: Application, named name: String) throws -> Bool {
+    static func deviceExists(app: Application, named name: TestDevice) throws -> Bool {
         let devices = try Self.getDevices(app: app)
         return devices.contains { (device) -> Bool in
-            return device.name == name
+            return device.name == name.name
         }
     }
     
@@ -150,23 +190,24 @@ struct TestHelper {
         let devices = try getDevices(app: app)
         for device in devices {
             if device.name.hasPrefix(prefix) {
-                try deleteTestSimulator(app: app, simulators: [device.name])
+                let simulator = Simulator(device: .testDevice(device.name), type: .custom(""))
+                try deleteTestSimulators(app: app, simulators: [simulator])
             }
         }
     }
     
-    static func shutdownSimulator(app: Application, device: String) throws {
-        let url = try URLHelper.escape(url: "shutdown/\(device)")
+    static func shutdownSimulator(app: Application, simulator: Simulator) throws {
+        let url = try URLHelper.escape(url: "shutdown/\(simulator.device.name)")
         try app.test(.POST, url, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
         })
     }
     
-    static func waitUntilBooted(app: Application, device: String, timeout: TimeInterval = 60) throws {
+    static func waitUntilBooted(app: Application, device: TestDevice, timeout: TimeInterval = 60) throws {
         let start = Date()
 
         while Date().timeIntervalSince(start) < timeout {
-            let createdDevice = try Self.getDevices(app: app).first(where: { $0.name == device })
+            let createdDevice = try Self.getDevices(app: app).first(where: { $0.name == device.name })
             if createdDevice == nil {
                 throw TestHelperError.deviceNotCreated
             }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftShell
 import Vapor
 
 // Show information about an installed application.
@@ -23,11 +24,12 @@ class AppInfoController: RouteCollection {
         guard let bundleIdentifier = req.parameters.get("bundleId") else {
             throw SimctlError.missingRouteParameters(["Bundle Identifier"])
         }
-        guard var output = String(data: shell("xcrun simctl appinfo \"\(device)\" \"\(bundleIdentifier)\""),
-                                  encoding: .utf8) else {
+
+        let args = ["simctl", "appinfo", device, bundleIdentifier]
+        
+        guard let output = try Shell.execute(.xcrun, args: args)?.sanitize() else {
             throw SimctlError.parseError()
         }
-        output = output.chomp()
         
         return Response(status: .ok, body: .init(stringLiteral: output))
     }
