@@ -1,27 +1,23 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 import PackageDescription
 
 let package = Package(
     name: "xcsimctl-server",
     platforms: [
-       .macOS(.v10_15)
+        .macOS(.v11)
     ],
     dependencies: [
-        .package(url: "https://github.com/ahcode0919/Fast.git", from: "0.0.3"),
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
+        .package(url: "https://github.com/ahcode0919/Fast.git", from: "0.0.5"),
+        .package(url: "https://github.com/ahcode0919/swift-shell.git", from: "0.0.4"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.61.1"),
     ],
     targets: [
         .target(
             name: "App",
             dependencies: [
                 .product(name: "Fast", package: "Fast"),
+                .product(name: "SwiftShell", package: "swift-shell"),
                 .product(name: "Vapor", package: "vapor")
-            ],
-            swiftSettings: [
-                // Enable better optimizations when building in Release configuration. Despite the use of
-                // the `.unsafeFlags` construct required by SwiftPM, this flag is recommended for Release
-                // builds. See <https://github.com/swift-server/guides#building-for-production> for details.
-                .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release))
             ]
         ),
         .target(name: "Run", dependencies: [.target(name: "App")]),
