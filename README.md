@@ -4,7 +4,7 @@ A xcrun simctl API server built in Swift + Vapor. Currently under development.
 
 ## Setup
 
-- Requires XCode 11.2+
+- Requires XCode 13.x+
 - Requires Homebrew
 - Install Vapor - `brew install vapor`
 - Run application - `vapor run`
@@ -84,7 +84,7 @@ pbpaste             Print the contents of the device's pasteboard to standard ou
 pbsync              Sync the pasteboard content from one pasteboard to another
 privacy             Grant, revoke, or reset privacy and permissions
 push                Send a simulated push notification
-Skip - register     Register a service from one bootstrap into another
+register            Register a service from one bootstrap into another
 Complete - rename   Rename a device
 reset               Reset launch subsystems
 runtime             Locate, copy, mount, and unmount simulator runtime disk images
